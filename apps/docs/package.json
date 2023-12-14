@@ -11,12 +11,16 @@
     "lint": "eslint ./stories/*.stories.tsx --max-warnings 0"
   },
   "dependencies": {
-    "@acme/ui": "workspace:*",
+    "@chakra-ui/react": "^2.8.2",
+    "@ngine/core": "workspace:*",
+    "@nostr-dev-kit/ndk": "2.3.0",
+    "@nostr-dev-kit/ndk-cache-dexie": "^2.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@storybook/addon-actions": "^7.5.3",
     "@storybook/addon-docs": "^7.5.3",
     "@storybook/addon-essentials": "^7.5.3",
@@ -27,7 +31,6 @@
     "eslint": "^8.54.0",
     "serve": "^14.2.1",
     "storybook": "^7.5.3",
-    "@repo/typescript-config": "workspace:*",
     "typescript": "^5.3.2",
     "vite": "^5.0.2"
   }

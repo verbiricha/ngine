@@ -9,14 +9,16 @@ const config = {
   addons: [
     getAbsolutePath("@storybook/addon-links"),
     getAbsolutePath("@storybook/addon-essentials"),
-    getAbsolutePath("@storybook/addon-docs"),
+    //getAbsolutePath("@storybook/addon-docs"),
   ],
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},
   },
 
-  core: {},
+  core: {
+    disableTelemetry: true,
+  },
 
   async viteFinal(config, { configType }) {
     // customize the Vite config here
@@ -26,8 +28,8 @@ const config = {
       resolve: {
         alias: [
           {
-            find: "ui",
-            replacement: resolve(__dirname, "../../../packages/ui/"),
+            find: "core",
+            replacement: resolve(__dirname, "../../../packages/core/"),
           },
         ],
       },
@@ -35,7 +37,7 @@ const config = {
   },
 
   docs: {
-    autodocs: true,
+    autodocs: false,
   },
 };
 

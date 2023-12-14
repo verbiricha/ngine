@@ -1,0 +1,250 @@
+{
+  "ngine.comment-label": {
+    "defaultMessage": "Comment",
+    "description": "Comment field label"
+  },
+  "ngine.comment-placeholder": {
+    "defaultMessage": "Type your reply here",
+    "description": "Comment field placeholder"
+  },
+  "ngine.copy": {
+    "defaultMessage": "Copy",
+    "description": "Button for copying"
+  },
+  "ngine.copy-error": {
+    "defaultMessage": "Couldn't copy to clipboard",
+    "description": "Copy to clipboard error message"
+  },
+  "ngine.copy-id": {
+    "defaultMessage": "Copy ID",
+    "description": "Copy event ID"
+  },
+  "ngine.copy-json": {
+    "defaultMessage": "Copy JSON",
+    "description": "Copy event JSON"
+  },
+  "ngine.copy-success": {
+    "defaultMessage": "Copied to clipboard",
+    "description": "Copy to clipboard success message"
+  },
+  "ngine.event-copy-success": {
+    "defaultMessage": "Event copied",
+    "description": "Success message for event JSON copy"
+  },
+  "ngine.event-id-copy-error": {
+    "defaultMessage": "Couldn't copy event ID",
+    "description": "Error message for event ID copy"
+  },
+  "ngine.event-id-copy-success": {
+    "defaultMessage": "Event ID copied",
+    "description": "Success message for event ID copy"
+  },
+  "ngine.event-json-copy-error": {
+    "defaultMessage": "Couldn't copy event",
+    "description": "Error message for event JSON copy"
+  },
+  "ngine.extension-login": {
+    "defaultMessage": "Log in with extension",
+    "description": "A button for loggin in with a nostr extension"
+  },
+  "ngine.follow": {
+    "defaultMessage": "Follow",
+    "description": "Follow a user"
+  },
+  "ngine.invoice-fetch-fail": {
+    "defaultMessage": "Couldn't get invoice",
+    "description": "Invoice fetching failed error message"
+  },
+  "ngine.likes-count": {
+    "defaultMessage": "Likes ({count})",
+    "description": "Likes count"
+  },
+  "ngine.log-out": {
+    "defaultMessage": "Log out",
+    "description": "Log out button"
+  },
+  "ngine.login-error": {
+    "defaultMessage": "Could not sign in",
+    "description": "Login failed error message"
+  },
+  "ngine.menu-reactions": {
+    "defaultMessage": "Reactions",
+    "description": "Reactions dialog opener"
+  },
+  "ngine.onboarding.avatar": {
+    "defaultMessage": "Add a profile image",
+    "description": "Onboarding avatar label"
+  },
+  "ngine.onboarding.bio": {
+    "defaultMessage": "Tell the world about you",
+    "description": "Onboarding bio label"
+  },
+  "ngine.onboarding.bio-helper": {
+    "defaultMessage": "This is optional and you can change it later if you like.",
+    "description": "Onboarding bio helper text"
+  },
+  "ngine.onboarding.bio-placeholder": {
+    "defaultMessage": "A few words about yourself",
+    "description": "Onboarding bio placeholder"
+  },
+  "ngine.onboarding.finish": {
+    "defaultMessage": "Finish",
+    "description": "Onboarding finish button"
+  },
+  "ngine.onboarding.ln-address": {
+    "defaultMessage": "Lightning address",
+    "description": "Onboarding ln address label"
+  },
+  "ngine.onboarding.ln-address-helper": {
+    "defaultMessage": "A lightning address allows you to receive payments from anyone in the world.",
+    "description": "Onboarding ln address helper text"
+  },
+  "ngine.onboarding.name-placeholder": {
+    "defaultMessage": "Samantha",
+    "description": "Onboarding name placeholder"
+  },
+  "ngine.onboarding.next": {
+    "defaultMessage": "Next",
+    "description": "Onboarding next button"
+  },
+  "ngine.onboarding.profile-created": {
+    "defaultMessage": "Profile created",
+    "description": "Profile created success message"
+  },
+  "ngine.onboarding.profile-created-error": {
+    "defaultMessage": "Something went wrong",
+    "description": "Profile created error message"
+  },
+  "ngine.onboarding.skip-step": {
+    "defaultMessage": "Skip for now",
+    "description": "Onboarding step skip button"
+  },
+  "ngine.onboarding.your-name": {
+    "defaultMessage": "What we will call you?",
+    "description": "Onboarding name label"
+  },
+  "ngine.onboarding.your-name-helper": {
+    "defaultMessage": "You can change it layer if you like.",
+    "description": "Onboarding name helper text"
+  },
+  "ngine.open-app": {
+    "defaultMessage": "Open",
+    "description": "Open app selector"
+  },
+  "ngine.open-in-wallet": {
+    "defaultMessage": "Open in wallet",
+    "description": "Open invoice in wallet"
+  },
+  "ngine.preview": {
+    "defaultMessage": "Preview",
+    "description": "Preview post switch"
+  },
+  "ngine.react-error": {
+    "defaultMessage": "Couldn't react",
+    "description": "Error message for reactions"
+  },
+  "ngine.react-success": {
+    "defaultMessage": "Reacted with {emoji}",
+    "description": "Success message for reactions"
+  },
+  "ngine.react-to": {
+    "defaultMessage": "Reacting to",
+    "description": "React modal title"
+  },
+  "ngine.react-with": {
+    "defaultMessage": "React with {emoji}",
+    "description": "React with button"
+  },
+  "ngine.reactions-count": {
+    "defaultMessage": "Reactions ({count})",
+    "description": "Reactions modal title"
+  },
+  "ngine.read-less": {
+    "defaultMessage": "Collapse story",
+    "description": "Collapse full article into only summary"
+  },
+  "ngine.read-more": {
+    "defaultMessage": "Read full story",
+    "description": "Read a full article"
+  },
+  "ngine.reply": {
+    "defaultMessage": "Reply",
+    "description": "Reply button"
+  },
+  "ngine.reply-error": {
+    "defaultMessage": "Unable to reply",
+    "description": "Reply error message"
+  },
+  "ngine.reply-success": {
+    "defaultMessage": "Replied",
+    "description": "Reply success message"
+  },
+  "ngine.replying-to": {
+    "defaultMessage": "Replying to",
+    "description": "Reply modal title"
+  },
+  "ngine.repost": {
+    "defaultMessage": "Repost",
+    "description": "Repost button"
+  },
+  "ngine.repost-error": {
+    "defaultMessage": "Couldn't repost",
+    "description": "Repost error message"
+  },
+  "ngine.repost-success": {
+    "defaultMessage": "Reposted",
+    "description": "Repost success message"
+  },
+  "ngine.reposting": {
+    "defaultMessage": "Repost",
+    "description": "Repost modal title"
+  },
+  "ngine.reposts-count": {
+    "defaultMessage": "Reposts ({count})",
+    "description": "Reposts count"
+  },
+  "ngine.show-more": {
+    "defaultMessage": "Show {count} more",
+    "description": "Button for showing more in feed"
+  },
+  "ngine.unfollow": {
+    "defaultMessage": "Unfollow",
+    "description": "Unfollow a user"
+  },
+  "ngine.unknown-kind": {
+    "defaultMessage": "Unknown event with kind {kind}",
+    "description": "Message to show for unknwon kinds"
+  },
+  "ngine.zap": {
+    "defaultMessage": "Zap {amount}",
+    "description": "Zap button"
+  },
+  "ngine.zap-action": {
+    "defaultMessage": "Zap",
+    "description": "Zap call to action"
+  },
+  "ngine.zap-sent": {
+    "defaultMessage": "{amount} sent",
+    "description": "Zap sent success message"
+  },
+  "ngine.zapping": {
+    "defaultMessage": "Zap",
+    "description": "Zap modal title"
+  },
+  "ngine.zapping-recipients": {
+    "defaultMessage": "Zap {count} recipients",
+    "description": "Zap split modal title"
+  },
+  "ngine.zaps-anonymous": {
+    "defaultMessage": "Anonymous",
+    "description": "Anonymous zap selector"
+  },
+  "ngine.zaps-count": {
+    "defaultMessage": "Zaps ({count})",
+    "description": "Zap count"
+  },
+  "ngine.zaps-public": {
+    "defaultMessage": "Public",
+    "description": "Public zap selector"
+  }
+}

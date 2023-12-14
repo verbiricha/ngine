@@ -20,7 +20,7 @@ module.exports = {
   parserOptions: {
     project,
   },
-  plugins: ["only-warn"],
+  plugins: ["only-warn", "formatjs"],
   globals: {
     JSX: true,
   },
@@ -35,5 +35,8 @@ module.exports = {
   // add rules configurations here
   rules: {
     "import/no-default-export": "off",
+    "formatjs/no-offset": "error",
+    "formatjs/enforce-description": "literal",
+    "formatjs/enforce-default-message": "literal"
   },
 };
