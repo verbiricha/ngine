@@ -14,6 +14,7 @@ export default function NEvent({ id, relays, ...props }: NEventProps) {
     {
       ids: [id],
     },
+    {},
     relays,
   );
   return event ? (

@@ -37,7 +37,7 @@ import User from "./User";
 import Amount from "./Amount";
 import QrCode from "./QrCode";
 import InputCopy from "./InputCopy";
-import { useSign } from "../context";
+import { useSign, useSigner } from "../context";
 import { useSession, useRelays } from "../state";
 import useFeedback from "../hooks/useFeedback";
 import useProfile from "../hooks/useProfile";
@@ -215,16 +215,16 @@ function SingleZapModal({
   const profile = useProfile(pubkey);
   const [amount, setAmount] = useState(defaultZapAmount);
   const session = useSession();
-  const isLoggedOut = session === null;
-  const [isAnon, setIsAnon] = useState(isLoggedOut);
+  const canSign = useSigner();
+  const [isAnon, setIsAnon] = useState(!canSign);
   const [invoice, setInvoice] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   const [isFetchingInvoice, setIsFetchingInvoice] = useState(false);
   const { data: lnurl, isError, isLoading, isFetched } = useLnurl(profile);
 
   useEffect(() => {
-    setIsAnon(isLoggedOut);
-  }, [isLoggedOut]);
+    setIsAnon(!canSign);
+  }, [canSign]);
 
   function closeModal() {
     setInvoice(null);
@@ -369,6 +369,32 @@ function SingleZapModal({
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Comment (optional)"
                 />
+                <RadioGroup
+                  mt={2}
+                  defaultValue={isAnon ? "private" : "public"}
+                  onChange={(value) => setIsAnon(value === "private")}
+                >
+                  <Stack spacing={2} direction="row">
+                    <Radio
+                      colorScheme="brand"
+                      value="public"
+                      isDisabled={!canSign}
+                    >
+                      <FormattedMessage
+                        id="ngine.zaps-public"
+                        description="Public zap selector"
+                        defaultMessage="Public"
+                      />
+                    </Radio>
+                    <Radio colorScheme="brand" value="private">
+                      <FormattedMessage
+                        id="ngine.zaps-anonymous"
+                        description="Anonymous zap selector"
+                        defaultMessage="Anonymous"
+                      />
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
               </Stack>
             )}
             {lnurl && invoice && (
@@ -391,32 +417,6 @@ function SingleZapModal({
               </Stack>
             )}
           </Stack>
-          <RadioGroup
-            mt={2}
-            defaultValue={isAnon ? "private" : "public"}
-            onChange={(value) => setIsAnon(value === "private")}
-          >
-            <Stack spacing={2} direction="row">
-              <Radio
-                colorScheme="brand"
-                value="public"
-                isDisabled={isLoggedOut}
-              >
-                <FormattedMessage
-                  id="ngine.zaps-public"
-                  description="Public zap selector"
-                  defaultMessage="Public"
-                />
-              </Radio>
-              <Radio colorScheme="brand" value="private">
-                <FormattedMessage
-                  id="ngine.zaps-anonymous"
-                  description="Anonymous zap selector"
-                  defaultMessage="Anonymous"
-                />
-              </Radio>
-            </Stack>
-          </RadioGroup>
         </ModalBody>
 
         <ModalFooter>
@@ -471,14 +471,14 @@ function MultiZapModal({
   const isFetched = results.every((result) => result.isFetched);
   const [amount, setAmount] = useState(defaultZapAmount);
   const session = useSession();
-  const isLoggedOut = session === null;
-  const [isAnon, setIsAnon] = useState(isLoggedOut);
+  const canSign = useSigner();
+  const [isAnon, setIsAnon] = useState(!canSign);
   const [invoices, setInvoices] = useState<string[] | null>(null);
   const [comment, setComment] = useState("");
 
   useEffect(() => {
-    setIsAnon(isLoggedOut);
-  }, [isLoggedOut]);
+    setIsAnon(!canSign);
+  }, [canSign]);
 
   function closeModal() {
     setInvoices(null);
@@ -629,6 +629,24 @@ function MultiZapModal({
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Leave a comment (optional)"
                 />
+                <RadioGroup
+                  mt={2}
+                  defaultValue={isAnon ? "private" : "public"}
+                  onChange={(value) => setIsAnon(value === "private")}
+                >
+                  <Stack spacing={2} direction="row">
+                    <Radio
+                      colorScheme="brand"
+                      value="public"
+                      isDisabled={!canSign}
+                    >
+                      Public
+                    </Radio>
+                    <Radio colorScheme="brand" value="private">
+                      Anonymous
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
               </>
             )}
             {lnurls &&
@@ -682,24 +700,6 @@ function MultiZapModal({
               })}
             </Stack>
           </Stack>
-          <RadioGroup
-            mt={2}
-            defaultValue={isAnon ? "private" : "public"}
-            onChange={(value) => setIsAnon(value === "private")}
-          >
-            <Stack spacing={2} direction="row">
-              <Radio
-                colorScheme="brand"
-                value="public"
-                isDisabled={isLoggedOut}
-              >
-                Public
-              </Radio>
-              <Radio colorScheme="brand" value="private">
-                Anonymous
-              </Radio>
-            </Stack>
-          </RadioGroup>
         </ModalBody>
 
         <ModalFooter>

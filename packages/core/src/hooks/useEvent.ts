@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import {
   NDKEvent,
@@ -6,29 +6,40 @@ import {
   NDKRelaySet,
   NDKSubscriptionCacheUsage,
 } from "@nostr-dev-kit/ndk";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 import { useNDK } from "../context";
+import { hashSha256 } from "../utils";
+import { SubscriptionOptions } from "./useEvents";
 
-export default function useEvent(filter: NDKFilter, relays?: string[]) {
+export default function useEvent(
+  filter: NDKFilter,
+  opts?: SubscriptionOptions,
+  relays?: string[],
+) {
   const ndk = useNDK();
-  const [event, setEvent] = useState<NDKEvent | null>(null);
+  const id = useMemo(() => {
+    return hashSha256(filter);
+  }, [filter]);
 
-  useEffect(() => {
-    const relaySet =
-      relays?.length ?? 0 > 0
-        ? NDKRelaySet.fromRelayUrls(relays as string[], ndk)
-        : undefined;
-    ndk
-      .fetchEvent(
+  const query: UseQueryResult<NDKEvent, any> = useQuery({
+    queryKey: ["use-event", id],
+    queryFn: () => {
+      const relaySet =
+        relays?.length ?? 0 > 0
+          ? NDKRelaySet.fromRelayUrls(relays as string[], ndk)
+          : undefined;
+      return ndk.fetchEvent(
         filter,
         {
           groupable: true,
           cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+          ...(opts ? opts : {}),
         },
         relaySet,
-      )
-      .then(setEvent);
-  }, []);
+      );
+    },
+  });
 
-  return event;
+  return query.data;
 }

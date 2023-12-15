@@ -6,7 +6,7 @@ import {
   ReactElement,
 } from "react";
 import { IntlProvider } from "react-intl";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, Provider } from "jotai";
 import {
   ChakraProvider,
   ColorModeScript,
@@ -29,7 +29,7 @@ import { generatePrivateKey, getPublicKey } from "nostr-tools";
 
 import useRates from "./hooks/useRates";
 import useLatestEvent from "./hooks/useLatestEvent";
-import { sessionAtom, relaysAtom, followsAtom, ratesAtom } from "./state";
+import { sessionAtom, relayListAtom, followsAtom, ratesAtom } from "./state";
 import { theme as defaultTheme } from "./theme";
 import { LinkComponent, Links } from "./types";
 import { getMessages } from "./i18n";
@@ -45,7 +45,8 @@ interface NgineContextProps {
     ev: Omit<NostrEvent, "pubkey">,
     signer?: NDKSigner,
   ) => Promise<NDKEvent | undefined>;
-  links: Links;
+  logOut: () => void;
+  links?: Links;
 }
 
 const NgineContext = createContext<NgineContextProps>({
@@ -62,13 +63,14 @@ const NgineContext = createContext<NgineContextProps>({
   sign: () => {
     return Promise.reject();
   },
+  logOut: () => {},
   links: {},
 });
 
 interface NgineProviderProps {
   ndk: NDK;
   theme?: Dict;
-  links: Links;
+  links?: Links;
   children: ReactNode;
   disableFiatRates?: boolean;
   locale?: string;
@@ -81,40 +83,52 @@ function SessionProvider({
   pubkey: string;
   children: ReactNode;
 }) {
-  const [, setContacts] = useAtom(followsAtom);
-  const [, setRelays] = useAtom(relaysAtom);
+  const [contactList, setContacts] = useAtom(followsAtom);
+  const [relayList, setRelayList] = useAtom(relayListAtom);
 
   // Contacts
 
-  const contacts = useLatestEvent({
-    kinds: [NDKKind.Contacts],
-    authors: [pubkey],
-  });
+  const contacts = useLatestEvent(
+    {
+      kinds: [NDKKind.Contacts],
+      authors: [pubkey],
+    },
+    {
+      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+      closeOnEose: false,
+    },
+  );
 
   useEffect(() => {
     if (contacts) {
-      setContacts(contacts);
+      const lastSeen = contactList?.created_at ?? 0;
+      const createdAt = contacts.created_at ?? 0;
+      if (createdAt > lastSeen) {
+        setContacts(contacts.rawEvent());
+      }
     }
   }, [contacts]);
 
   // Relays
 
-  const relays = useLatestEvent({
-    kinds: [NDKKind.RelayList],
-    authors: [pubkey],
-  });
+  const relays = useLatestEvent(
+    {
+      kinds: [NDKKind.RelayList],
+      authors: [pubkey],
+    },
+    {
+      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+      closeOnEose: false,
+    },
+  );
 
   useEffect(() => {
     if (relays) {
-      const relaySettings = relays.tags
-        .filter((t) => t[0] === "r")
-        .map((t) => {
-          const url = t[1];
-          const read = t.length === 2 || t[2] === "read";
-          const write = t.length === 2 || t[2] === "write";
-          return { url, read, write };
-        });
-      setRelays(relaySettings);
+      const lastSeen = relayList?.created_at ?? 0;
+      const createdAt = relays.created_at ?? 0;
+      if (createdAt > lastSeen) {
+        setRelayList(relays.rawEvent());
+      }
     }
   }, [relays]);
 
@@ -130,6 +144,8 @@ export const NgineProvider = ({
   locale,
 }: NgineProviderProps) => {
   const [session, setSession] = useAtom(sessionAtom);
+  const [, setFollows] = useAtom(followsAtom);
+  const [, setRelays] = useAtom(relayListAtom);
   const [, setRates] = useAtom(ratesAtom);
   const rates = useRates(disableFiatRates);
 
@@ -201,9 +217,16 @@ export const NgineProvider = ({
     }
   }
 
+  function logOut() {
+    ndk.signer = undefined;
+    setSession(null);
+    setFollows(null);
+    setRelays(null);
+  }
+
   return (
     <NgineContext.Provider
-      value={{ ndk, nip07Login, nsecLogin, npubLogin, sign, links }}
+      value={{ ndk, nip07Login, nsecLogin, npubLogin, sign, logOut, links }}
     >
       <IntlProvider
         defaultLocale="en-US"
@@ -212,7 +235,7 @@ export const NgineProvider = ({
       >
         <ChakraProvider theme={theme}>
           <QueryClientProvider client={queryClient}>
-            <>
+            <Provider>
               <ColorModeScript
                 initialColorMode={theme.config.initialColorMode}
               />
@@ -223,7 +246,7 @@ export const NgineProvider = ({
               ) : (
                 children
               )}
-            </>
+            </Provider>
           </QueryClientProvider>
         </ChakraProvider>
       </IntlProvider>
@@ -293,7 +316,7 @@ export const useLink = (type: LinkType, value: string): string | null => {
   return null;
 };
 
-export const useLinks = (): Links => {
+export const useLinks = (): Links | undefined => {
   const context = useContext(NgineContext);
   if (context === undefined) {
     throw new Error("Ngine context not found");
@@ -309,4 +332,12 @@ export const useLinkComponent = (): ((
     throw new Error("Ngine context not found");
   }
   return context.links?.component ?? Link;
+};
+
+export const useLogOut = () => {
+  const context = useContext(NgineContext);
+  if (context === undefined) {
+    throw new Error("Ngine context not found");
+  }
+  return context.logOut;
 };

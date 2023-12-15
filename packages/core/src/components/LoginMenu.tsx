@@ -5,24 +5,25 @@ import {
   MenuList,
   MenuListProps,
   MenuItem,
+  MenuDivider,
   Icon,
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { FormattedMessage } from "react-intl";
 
 import Avatar from "./Avatar";
-import { sessionAtom } from "../state";
+import { useLogOut } from "../context";
+import { sessionAtom, followsAtom, relaysAtom } from "../state";
 import { Close, ChevronDown } from "../icons";
 
-interface LoginMenuProps extends MenuListProps {}
+export interface LoginMenuProps extends MenuListProps {}
 
 export default function LoginMenu({ children }: LoginMenuProps) {
   const [session, setSession] = useAtom(sessionAtom);
+  const [, setFollows] = useAtom(followsAtom);
+  const [, setRelays] = useAtom(relaysAtom);
   const pubkey = session?.pubkey;
-
-  function logOut() {
-    setSession(null);
-  }
+  const logOut = useLogOut();
 
   return pubkey ? (
     <Menu>

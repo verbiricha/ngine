@@ -1,5 +1,16 @@
+// todo: make ssr friendly
 import { useEffect, useRef } from "react";
 import QRCodeStyling from "qr-code-styling";
+
+const useQRCodeStyling = (
+  options: QRCodeStylingOptions,
+): QRCodeStyling | null => {
+  if (typeof window !== "undefined") {
+    const qrCodeStyling: QRCodeStyling = new QRCodeStyling(options);
+    return qrCodeStyling;
+  }
+  return null;
+};
 
 export interface QrCodeProps {
   data?: string;
@@ -10,40 +21,40 @@ export interface QrCodeProps {
 }
 
 export default function QrCode(props: QrCodeProps) {
-  const qrRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const qr = useQRCodeStyling({
+    width: props.width || 256,
+    height: props.height || 256,
+    data: props.data,
+    margin: 5,
+    type: "canvas",
+    image: props.avatar,
+    dotsOptions: {
+      type: "rounded",
+    },
+    cornersSquareOptions: {
+      type: "extra-rounded",
+    },
+    imageOptions: {
+      crossOrigin: "anonymous",
+    },
+  });
 
   useEffect(() => {
-    if ((props.data?.length ?? 0) > 0 && qrRef.current) {
-      const qr = new QRCodeStyling({
-        width: props.width || 256,
-        height: props.height || 256,
-        data: props.data,
-        margin: 5,
-        type: "canvas",
-        image: props.avatar,
-        dotsOptions: {
-          type: "rounded",
-        },
-        cornersSquareOptions: {
-          type: "extra-rounded",
-        },
-        imageOptions: {
-          crossOrigin: "anonymous",
-        },
-      });
-      qrRef.current.innerHTML = "";
-      qr.append(qrRef.current);
+    if ((props.data?.length ?? 0) > 0 && ref.current && qr) {
+      ref.current.innerHTML = "";
+      qr.append(ref.current);
       if (props.link) {
-        qrRef.current.onclick = function () {
+        ref.current.onclick = function () {
           const elm = document.createElement("a");
           elm.href = props.link ?? "";
           elm.click();
         };
       }
-    } else if (qrRef.current) {
-      qrRef.current.innerHTML = "";
+    } else if (ref.current) {
+      ref.current.innerHTML = "";
     }
-  }, [props.data, props.link]);
+  }, [props.data, ref, qr]);
 
-  return <div ref={qrRef}></div>;
+  return <div ref={ref}></div>;
 }

@@ -21,9 +21,9 @@ import {
 } from "../context";
 import type { LoginMethod } from "../types";
 
-interface LoginProps {
-  onLogin(): void;
-  method?: LoginMethod;
+export interface LoginProps {
+  onLogin?: () => void;
+  method: LoginMethod;
 }
 
 export function LoginNip07({ onLogin }: LoginProps) {
@@ -120,13 +120,13 @@ export function LoginPubkey({ onLogin }: LoginProps) {
   );
 }
 
-export default function Login({ method = "nip07", onLogin }: LoginProps) {
+export default function Login({ method, onLogin }: LoginProps) {
   if (method === "nip07") {
-    return <LoginNip07 onLogin={onLogin} />;
+    return <LoginNip07 method={method} onLogin={onLogin} />;
   }
 
   if (method === "npub") {
-    return <LoginPubkey onLogin={onLogin} />;
+    return <LoginPubkey method={method} onLogin={onLogin} />;
   }
 
   return null;

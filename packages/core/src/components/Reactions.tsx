@@ -126,8 +126,8 @@ export function ReactionCounts({
                   icon={Zap}
                   count={<Amount amount={total} />}
                   reaction={reaction}
-                  onClick={canSign ? zapModal.onOpen : undefined}
-                  cursor={canSign ? "pointer" : "auto"}
+                  onClick={zapModal.onOpen}
+                  cursor="pointer"
                 />
                 {zapModal.isOpen && (
                   <ZapModal pubkey={event.pubkey} event={event} {...zapModal} />

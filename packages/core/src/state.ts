@@ -1,6 +1,6 @@
 import { atom, useAtomValue } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import type { NDKEvent } from "@nostr-dev-kit/ndk";
+import type { NostrEvent } from "@nostr-dev-kit/ndk";
 
 import type { Relay, Rates, Session, Currency } from "./types";
 
@@ -8,8 +8,24 @@ export const sessionAtom = atomWithStorage<Session | null>(
   "ngine.session",
   null,
 );
-export const relaysAtom = atom<Relay[]>([]);
-export const followsAtom = atom<NDKEvent | null>(null);
+export const relayListAtom = atomWithStorage<NostrEvent | null>(
+  "ngine.10002",
+  null,
+);
+export const relaysAtom = atom<Relay[]>((get) => {
+  const relayList = get(relayListAtom);
+  return (
+    relayList?.tags
+      .filter((t) => t[0] === "r")
+      .map((t) => {
+        const url = t[1].replace(/\/$/, "");
+        const read = t.length === 2 || t[2] === "read";
+        const write = t.length === 2 || t[2] === "write";
+        return { url, read, write };
+      }) || []
+  );
+});
+export const followsAtom = atom<NostrEvent | null>(null);
 export const contactsAtom = atom<string[]>((get) => {
   const follows = get(followsAtom);
   return follows?.tags.filter((t) => t[0] === "p").map((t) => t[1]) ?? [];

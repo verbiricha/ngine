@@ -15,7 +15,7 @@ interface LNURLService {
   commentAllowed?: number;
 }
 
-export function useLnurl(profile: NDKUserProfile | null) {
+export function useLnurl(profile: NDKUserProfile | undefined) {
   const key = profile?.lud16 ?? "none";
   const query = useQuery({
     queryKey: ["lnurl", key],

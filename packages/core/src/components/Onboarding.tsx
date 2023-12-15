@@ -27,7 +27,7 @@ import { useIntl, FormattedMessage, MessageDescriptor } from "react-intl";
 
 import ImagePicker from "./ImagePicker";
 import { useNDK, useNsecLogin } from "../context";
-import { relaysAtom, followsAtom } from "../state";
+import { relayListAtom, followsAtom } from "../state";
 import { unixNow } from "../time";
 import type { Relay } from "../types";
 import useFeedback from "../hooks/useFeedback";
@@ -251,7 +251,7 @@ export default function Onboarding({
     { url: "wss://relay.damus.io", read: true, write: true },
     { url: "wss://relay.nostr.band", read: true, write: false },
   ];
-  const [, setRelays] = useAtom(relaysAtom);
+  const [, setRelays] = useAtom(relayListAtom);
   const [, setProfile] = useAtom(profileAtom);
   const [, setFollowing] = useAtom(followingAtom);
   const [, setFollows] = useAtom(followsAtom);
@@ -316,8 +316,8 @@ export default function Onboarding({
         }),
         created_at: unixNow(),
       };
-      await publishEvent(relayMetadata);
-      setRelays(userRelays);
+      const newRelays = await publishEvent(relayMetadata);
+      setRelays(newRelays.rawEvent());
       // Contacts
       const contacts = {
         pubkey,
@@ -326,7 +326,8 @@ export default function Onboarding({
         tags: follows,
         created_at: unixNow(),
       };
-      setFollows(await publishEvent(contacts));
+      const newFollows = await publishEvent(contacts);
+      setFollows(newFollows.rawEvent());
       toast.success(
         formatMessage({
           id: "ngine.onboarding.profile-created",

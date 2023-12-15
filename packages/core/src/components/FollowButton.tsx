@@ -5,7 +5,7 @@ import { Button } from "@chakra-ui/react";
 import type { ButtonProps } from "@chakra-ui/react";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 
-import { useNDK } from "../context";
+import { useNDK, useSigner } from "../context";
 import { followsAtom, useSession } from "../state";
 import { unixNow } from "../time";
 
@@ -17,6 +17,7 @@ interface FollowButtonProps extends ButtonProps {
 
 export default function FollowButton({ pubkey, ...rest }: FollowButtonProps) {
   const ndk = useNDK();
+  const canSign = useSigner();
   const [isBusy, setIsBusy] = useState(false);
   const session = useSession();
   const [contacts, setContacts] = useAtom(followsAtom);
@@ -39,7 +40,7 @@ export default function FollowButton({ pubkey, ...rest }: FollowButtonProps) {
       const signed = new NDKEvent(ndk, ev);
       await signed.sign();
       await signed.publish();
-      setContacts(signed);
+      setContacts(signed.rawEvent());
     } catch (error) {
       console.error(error);
     } finally {
@@ -61,7 +62,7 @@ export default function FollowButton({ pubkey, ...rest }: FollowButtonProps) {
       const signed = new NDKEvent(ndk, ev);
       await signed.sign();
       await signed.publish();
-      setContacts(signed);
+      setContacts(signed.rawEvent());
     } catch (error) {
       console.error(error);
     } finally {
@@ -71,7 +72,7 @@ export default function FollowButton({ pubkey, ...rest }: FollowButtonProps) {
 
   return (
     <Button
-      isDisabled={!pubkey || !contacts}
+      isDisabled={!pubkey || !contacts || !canSign}
       isLoading={isBusy}
       variant="solid"
       onClick={isFollowed ? unfollow : follow}

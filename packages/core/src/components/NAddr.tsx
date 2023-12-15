@@ -25,6 +25,7 @@ export default function NAddr({
       authors: [pubkey],
       "#d": [identifier],
     },
+    {},
     relays,
   );
   return event ? (
