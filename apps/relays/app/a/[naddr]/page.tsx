@@ -5,7 +5,7 @@ import { Alert, AlertIcon } from "@chakra-ui/react";
 import { FormattedMessage } from "react-intl";
 import { nip19 } from "nostr-tools";
 
-import Address from "../../components/Address";
+import Address from "../../components/address";
 import Layout from "../../components/layout";
 
 export default function AddressPage({ params }: { params: { naddr: string } }) {

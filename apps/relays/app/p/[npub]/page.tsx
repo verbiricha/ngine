@@ -1,4 +1,6 @@
-"use client";
+"use client"
+
+import dynamic from "next/dynamic";
 
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
@@ -6,7 +8,10 @@ import { Alert, AlertIcon } from "@chakra-ui/react";
 import { nip19 } from "nostr-tools";
 
 import Layout from "../../components/layout";
-import Profile from "../../components/profile";
+const Profile = dynamic(() => import("../../components/profile"), {
+  ssr: false,
+});
+
 
 export default function ProfilePage({ params }: { params: { npub: string } }) {
   // todo: not found msg

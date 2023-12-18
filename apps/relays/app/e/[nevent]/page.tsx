@@ -5,7 +5,7 @@ import { Alert, AlertIcon } from "@chakra-ui/react";
 import { FormattedMessage } from "react-intl";
 import { nip19 } from "nostr-tools";
 
-import Event from "../../components/Event";
+import Event from "../../components/event";
 import Layout from "../../components/layout";
 
 export default function EventPage({ params }: { params: { nevent: string } }) {
