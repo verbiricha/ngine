@@ -1,9 +1,7 @@
-import dynamic from "next/dynamic";
+"use client";
 
 import Layout from "../../components/layout";
-const Relay = dynamic(() => import("../../components/relay"), {
-  ssr: false,
-});
+import Relay from "../../components/relay";
 
 export default function RelayPage({ params }: { params: { nrelay: string } }) {
   return (

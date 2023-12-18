@@ -30,7 +30,7 @@ import {
 import { FormattedNumber } from "react-intl";
 import { generatePrivateKey, getPublicKey } from "nostr-tools";
 import { NDKEvent, NDKPrivateKeySigner } from "@nostr-dev-kit/ndk";
-import("@getalby/bitcoin-connect-react"); // enable NWC
+//import("@getalby/bitcoin-connect-react"); // enable NWC
 import { useIntl, FormattedMessage } from "react-intl";
 
 import User from "./User";

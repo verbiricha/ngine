@@ -1,17 +1,10 @@
 "use client"
 
-import dynamic from "next/dynamic";
-
 import { useMemo } from "react";
-import { FormattedMessage } from "react-intl";
-import { Alert, AlertIcon } from "@chakra-ui/react";
 import { nip19 } from "nostr-tools";
 
 import Layout from "../../components/layout";
-const Profile = dynamic(() => import("../../components/profile"), {
-  ssr: false,
-});
-
+import Pubkey from "../../components/pubkey";
 
 export default function ProfilePage({ params }: { params: { npub: string } }) {
   // todo: not found msg
@@ -32,18 +25,7 @@ export default function ProfilePage({ params }: { params: { npub: string } }) {
 
   return (
     <Layout>
-      {pubkey ? (
-        <Profile pubkey={pubkey} />
-      ) : (
-        <Alert>
-          <AlertIcon />
-          <FormattedMessage
-            id="bad-npub"
-            description="Error shown when failing to decode npub"
-            defaultMessage="Could not decode npub"
-          />
-        </Alert>
-      )}
+      <Pubkey pubkey={pubkey} />
     </Layout>
   );
 }
