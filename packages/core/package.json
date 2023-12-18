@@ -56,10 +56,10 @@
     "light-bolt11-decoder": "^3.0.0",
     "lodash.uniqby": "^4.7.0",
     "nostr-tools": "^1.17.0",
+    "qrcode.react": "^3.1.0",
     "react-intersection-observer": "^9.5.3",
     "react-intl": "^6.5.5",
     "react-markdown": "^9.0.1",
-    "react-qr-code": "^2.0.12",
     "remark-gfm": "^4.0.0"
   }
 }
