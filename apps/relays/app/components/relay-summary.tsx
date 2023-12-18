@@ -254,7 +254,7 @@ function CommunityPreferences({ info }: RelaySummaryProps) {
 
 export function RelaySummaryInfo({ info }: RelaySummaryProps) {
   return (
-    <Stack overflowX="scroll">
+    <Stack>
       <Description info={info} />
       <Nips info={info} />
       <Operator info={info} />
