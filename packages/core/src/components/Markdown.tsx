@@ -435,7 +435,7 @@ export default function Markdown({
     };
   }, []);
   return (
-    <Stack wordBreak="break-word" {...rest}>
+    <Stack dir="auto" wordBreak="break-word" {...rest}>
       <ReactMarkdown
         // @ts-ignore
         components={markdownComponents}

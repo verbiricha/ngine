@@ -56,7 +56,7 @@ export default function LongForm({
       </CardHeader>
       <CardBody>
         <Stack>
-          <Heading fontSize="xl">{title}</Heading>
+          <Heading fontSize="xl" dir="auto">{title}</Heading>
           {seeAll ? (
             <Markdown
               content={event.content}
