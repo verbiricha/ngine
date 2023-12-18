@@ -142,8 +142,8 @@ export function ReactionCounts({
                   icon={Heart}
                   count={reactions.length}
                   reaction={reaction}
-                  onClick={pubkey ? reactionModal.onOpen : undefined}
-                  cursor={pubkey ? "pointer" : "auto"}
+                  onClick={canSign ? reactionModal.onOpen : undefined}
+                  cursor={canSign ? "pointer" : "auto"}
                 />
                 {reactionModal.isOpen && (
                   <ReactionPicker
