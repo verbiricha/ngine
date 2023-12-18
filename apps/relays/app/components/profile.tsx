@@ -5,7 +5,6 @@ import {
   useProfile,
   useEvent,
   User,
-  FollowButton,
   ZapButton,
   Feed,
   Markdown,
@@ -36,10 +35,7 @@ export default function Profile({ pubkey }: { pubkey: string }) {
     <Stack key={pubkey} gap={4}>
       <HStack justify="space-between">
         <User size="lg" fontSize="xl" pubkey={pubkey} />
-        <HStack>
-          <ZapButton pubkey={pubkey} variant="outline" size="sm" />
-          <FollowButton pubkey={pubkey} variant="outline" size="sm" />
-        </HStack>
+        <ZapButton pubkey={pubkey} variant="outline" size="sm" />
       </HStack>
       {profile?.about && (
         <Markdown color="chakra-subtle-text" content={profile.about} />
