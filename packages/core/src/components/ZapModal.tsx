@@ -398,10 +398,8 @@ function SingleZapModal({
               </Stack>
             )}
             {lnurl && invoice && (
-              <Stack>
-                <Box cursor="pointer">
-                  <QrCode data={invoice} link={`lightning:${invoice}`} />
-                </Box>
+              <Stack align="center">
+                <QrCode data={invoice} />
                 <InputCopy text={invoice} />
                 <Button
                   variant="solid"
@@ -653,10 +651,8 @@ function MultiZapModal({
               invoices &&
               invoices.map((invoice) => {
                 return (
-                  <Stack key={invoice}>
-                    <Box cursor="pointer">
-                      <QrCode data={invoice} link={`lightning:${invoice}`} />
-                    </Box>
+                  <Stack align="center" key={invoice}>
+                    <QrCode data={invoice} />
                     <Stack>
                       <InputCopy text={invoice} />
                       <Button
