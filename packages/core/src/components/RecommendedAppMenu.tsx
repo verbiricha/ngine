@@ -176,7 +176,7 @@ function AppMenuItem({
           {isPreferredApp ? (
             <HStack>
               <Text>{app.display_name || app.name}</Text>
-              <Icon as={Star} boxSize={3} color="brand.500" />
+              <Icon as={Star} boxSize={3} color="chakra-subtle-text" />
             </HStack>
           ) : (
             <Text>{app.display_name || app.name}</Text>

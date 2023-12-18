@@ -11,6 +11,7 @@ import Container from "./container";
 import Main from "./main";
 import Header from "./header";
 import Footer from "./footer";
+import { theme } from "../theme";
 
 const cacheAdapter = new NDKCacheAdapterDexie({ dbName: "relays" });
 const ndk = new NDK({
@@ -27,6 +28,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <NgineProvider
+      theme={theme}
       ndk={ndk}
       links={{
         component: Link,
