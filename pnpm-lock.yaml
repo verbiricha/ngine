@@ -111,9 +111,6 @@ importers:
       nostr-tools:
         specifier: ^1.17.0
         version: 1.17.0(typescript@5.3.2)
-      qr-code-styling:
-        specifier: 1.6.0-rc.1
-        version: 1.6.0-rc.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -12042,16 +12039,6 @@ packages:
       - supports-color
       - utf-8-validate
     dev: true
-
-  /qr-code-styling@1.6.0-rc.1:
-    resolution: {integrity: sha512-ModRIiW6oUnsP18QzrRYZSc/CFKFKIdj7pUs57AEVH20ajlglRpN3HukjHk0UbNMTlKGuaYl7Gt6/O5Gg2NU2Q==}
-    dependencies:
-      qrcode-generator: 1.4.4
-    dev: false
-
-  /qrcode-generator@1.4.4:
-    resolution: {integrity: sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==}
-    dev: false
 
   /qrcode.react@3.1.0(react@18.2.0):
     resolution: {integrity: sha512-oyF+Urr3oAMUG/OiOuONL3HXM+53wvuH3mtIWQrYmsXoAq0DkvZp2RYUWFSMFtbdOpuS++9v+WAkzNVkMlNW6Q==}
