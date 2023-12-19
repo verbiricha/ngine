@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "storybook dev -p 6006",
-    "build": "storybook build --docs",
+    "build": "storybook build",
     "preview-storybook": "serve storybook-static",
     "clean": "rm -rf .turbo && rm -rf node_modules",
     "lint": "eslint ./stories/*.stories.tsx --max-warnings 0"
