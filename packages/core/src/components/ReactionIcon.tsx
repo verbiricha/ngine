@@ -1,6 +1,7 @@
-import { Text, Icon, Image, TextProps, ImageProps } from "@chakra-ui/react";
+import { Text, Icon, TextProps, ImageProps } from "@chakra-ui/react";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 
+import Emoji from "./Emoji";
 import { Heart, Repost } from "../icons";
 
 interface ReactionIconProps
@@ -26,7 +27,7 @@ export default function ReactionIcon({
       t[1] === `${emoji.slice(1, emoji?.length - 1)}`,
   );
   return customEmoji ? (
-    <Image boxSize={size} src={customEmoji[2]} />
+    <Emoji alt={customEmoji[1]} boxSize={size} src={customEmoji[2]} />
   ) : emoji && !["+", "-"].includes(emoji) ? (
     <Text fontSize={fontSize}>{emoji}</Text>
   ) : (

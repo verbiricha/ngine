@@ -27,13 +27,12 @@ export default function useReactions(
   kinds: ReactionKind[],
   live = true,
 ): ReactionEvents {
-  const [t, id] = useMemo(() => event.tagReference(), [event]);
   const filter = useMemo(() => {
     return {
       kinds,
-      [`#${t}`]: [id],
+      ...event.filter(),
     } as NDKFilter;
-  }, [t, id, kinds]);
+  }, [event, kinds]);
   const { events } = useEvents(filter, {
     disable: !live,
     closeOnEose: false,

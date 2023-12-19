@@ -1,0 +1,23 @@
+import { NDKFilter } from "@nostr-dev-kit/ndk";
+
+export function addressesToFilter(addresses: string[]): NDKFilter {
+  const filter = addresses.reduce(
+    (acc, a) => {
+      const [k, pubkey, d] = a.split(":");
+      acc.kinds.add(Number(k));
+      acc.authors.add(pubkey);
+      acc["#d"].add(d);
+      return acc;
+    },
+    {
+      kinds: new Set(),
+      authors: new Set(),
+      "#d": new Set(),
+    },
+  );
+  return {
+    kinds: [...filter.kinds],
+    authors: [...filter.authors],
+    "#d": [...filter["#d"]],
+  };
+}

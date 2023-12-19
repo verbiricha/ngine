@@ -51,6 +51,10 @@
     "defaultMessage": "Follow",
     "description": "Follow a user"
   },
+  "ngine.get-started": {
+    "defaultMessage": "Get started",
+    "description": "Button for logging in"
+  },
   "ngine.invoice-fetch-fail": {
     "defaultMessage": "Couldn't get invoice",
     "description": "Invoice fetching failed error message"
@@ -59,17 +63,45 @@
     "defaultMessage": "Likes ({count})",
     "description": "Likes count"
   },
+  "ngine.load-more": {
+    "defaultMessage": "Load more",
+    "description": "Button for loading more in feed"
+  },
   "ngine.log-out": {
     "defaultMessage": "Log out",
     "description": "Log out button"
+  },
+  "ngine.login": {
+    "defaultMessage": "Log in",
+    "description": "Title of login modal"
   },
   "ngine.login-error": {
     "defaultMessage": "Could not sign in",
     "description": "Login failed error message"
   },
+  "ngine.login-nip07": {
+    "defaultMessage": "Nostr extension",
+    "description": "Title of extension login section"
+  },
+  "ngine.login-nip07-descr": {
+    "defaultMessage": "You can use a nostr extension to log in to the site.",
+    "description": "Description of extension login section"
+  },
+  "ngine.login-npub": {
+    "defaultMessage": "Public key",
+    "description": "Title of pubkey login section"
+  },
+  "ngine.login-npub-descr": {
+    "defaultMessage": "You can log in with a pubkey or nostr address for browsing the site in read-only mode.",
+    "description": "Description of pubkey login section"
+  },
   "ngine.menu-reactions": {
     "defaultMessage": "Reactions",
     "description": "Reactions dialog opener"
+  },
+  "ngine.npub-placeholder": {
+    "defaultMessage": "npub, nprofile or nostr address...",
+    "description": "Placeholder for pubkey picker field"
   },
   "ngine.onboarding.avatar": {
     "defaultMessage": "Add a profile image",
@@ -139,12 +171,16 @@
     "defaultMessage": "Preview",
     "description": "Preview post switch"
   },
+  "ngine.pubkey-login": {
+    "defaultMessage": "Log in (read only)",
+    "description": "A button for logging in with a public key"
+  },
   "ngine.react-error": {
     "defaultMessage": "Couldn't react",
     "description": "Error message for reactions"
   },
   "ngine.react-success": {
-    "defaultMessage": "Reacted with {emoji}",
+    "defaultMessage": "Reacted with",
     "description": "Success message for reactions"
   },
   "ngine.react-to": {
@@ -152,7 +188,7 @@
     "description": "React modal title"
   },
   "ngine.react-with": {
-    "defaultMessage": "React with {emoji}",
+    "defaultMessage": "React with",
     "description": "React with button"
   },
   "ngine.reactions-count": {
@@ -214,6 +250,14 @@
   "ngine.unknown-kind": {
     "defaultMessage": "Unknown event with kind {kind}",
     "description": "Message to show for unknwon kinds"
+  },
+  "ngine.upload": {
+    "defaultMessage": "Upload",
+    "description": "Upload button"
+  },
+  "ngine.upload-url": {
+    "defaultMessage": "Image URL",
+    "description": "Placeholder for image upload URL field"
   },
   "ngine.zap": {
     "defaultMessage": "Zap {amount}",

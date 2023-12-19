@@ -16,6 +16,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { nip19 } from "nostr-tools";
 
+import Emoji from "./Emoji";
 import Blockquote from "./Blockquote";
 import NEvent from "./NEvent";
 import NAddr from "./NAddr";
@@ -320,10 +321,11 @@ function extractCustomEmoji(fragments: Fragment[], tags: Tags) {
           const t = tags.find((a) => a[0] === "emoji" && a[1] === i);
           if (t) {
             return (
-              <Image
+              <Emoji
                 borderRadius="none"
                 display="inline"
                 fit="contain"
+                alt={t[1]}
                 src={t[2]}
                 boxSize={5}
               />

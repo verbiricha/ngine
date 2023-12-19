@@ -4,7 +4,6 @@ import {
   Text,
   TextProps,
   Icon,
-  Image,
   ImageProps,
 } from "@chakra-ui/react";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
@@ -12,6 +11,7 @@ import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import Address from "./Address";
 import NEvent from "./NEvent";
 import User from "./User";
+import Emoji from "./Emoji";
 import { EventProps } from "../types";
 import { Heart, Repost } from "../icons";
 
@@ -34,7 +34,7 @@ export function ReactionIcon({ event, boxSize, fontSize }: ReactionIconProps) {
       t[1] === `${emoji.slice(1, emoji?.length - 1)}`,
   );
   return customEmoji ? (
-    <Image boxSize={boxSize} src={customEmoji[2]} />
+    <Emoji alt={customEmoji[1]} boxSize={boxSize} src={customEmoji[2]} />
   ) : emoji && !["+", "-"].includes(emoji) ? (
     <Text fontSize={fontSize}>{emoji}</Text>
   ) : (
@@ -48,7 +48,7 @@ export default function Reaction({ event, ...props }: EventProps) {
   return (
     <Stack gap={1} w="100%">
       <HStack>
-        <ReactionIcon event={event} boxSize={4} fontSize="md" />
+        <ReactionIcon event={event} boxSize={6} fontSize="lg" />
         <User size="xs" fontSize="sm" pubkey={event.pubkey} />
       </HStack>
       {e && <NEvent id={e} {...props} />}

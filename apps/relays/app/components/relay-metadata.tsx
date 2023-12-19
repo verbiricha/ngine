@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useMemo } from "react";
 import { Heading, Stack, HStack } from "@chakra-ui/react";

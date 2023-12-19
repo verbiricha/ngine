@@ -10,11 +10,11 @@ import {
   StackProps,
   Text,
   Icon,
-  Image,
 } from "@chakra-ui/react";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import { useInView } from "react-intersection-observer";
 
+import Emoji from "./Emoji";
 import Amount from "./Amount";
 import EventMenu from "./EventMenu";
 import RepostModal from "./RepostModal";
@@ -51,9 +51,9 @@ function ReactionCount({ icon, count, reaction, ...rest }: ReactionCountProps) {
       t[1] === `${emoji.slice(1, emoji?.length - 1)}`,
   );
   return (
-    <Flex align="center" gap={2} direction="row" {...rest}>
+    <Flex align="center" gap={2} direction="row" {...rest} wrap="wrap">
       {customEmoji ? (
-        <Image boxSize={4} src={customEmoji[2]} />
+        <Emoji alt={customEmoji[1]} src={customEmoji[2]} />
       ) : emoji && !["+", "-"].includes(emoji) ? (
         <Text fontSize="xs">{emoji}</Text>
       ) : (

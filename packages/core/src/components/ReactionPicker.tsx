@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   useColorMode,
+  useToast,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -10,26 +11,118 @@ import {
   ModalFooter,
   Text,
   Stack,
+  Image,
   HStack,
   Button,
 } from "@chakra-ui/react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { useIntl, FormattedMessage } from "react-intl";
+import { useQuery } from "@tanstack/react-query";
+import NDK, {
+  NDKEvent,
+  NDKKind,
+  NDKFilter,
+  NDKSubscriptionCacheUsage,
+  NostrEvent,
+} from "@nostr-dev-kit/ndk";
 
 import User from "./User";
-import { useSigner } from "../context";
+import Emoji from "./Emoji";
+import { useNDK, useSigner, useSign } from "../context";
 import { useSession } from "../state";
-import useFeedback from "../hooks/useFeedback";
-import { EventProps } from "../types";
+import { defaultOptions } from "../hooks/useFeedback";
+import { EventProps, Tag } from "../types";
+import { tagValues } from "../tags";
+import { unixNow } from "../time";
+import { addressesToFilter } from "../filter";
 
 interface ReactionPickerProps extends EventProps {
   isOpen: boolean;
   onClose(): void;
 }
 
-interface Emoji {
-  native: string;
+interface ReactionEmoji {
+  id: string;
+  native?: string;
+  shortcodes: string;
+  src?: string;
+}
+
+interface CustomEmoji {
+  id: string;
+  name: string;
+  skins: { src: string }[];
+}
+
+interface EmojiCollection {
+  id: string;
+  name: string;
+  emojis: CustomEmoji[];
+}
+
+function tagToCustomEmoji(t: Tag): CustomEmoji {
+  const [_, shortcode, src] = t;
+  const name = shortcode.replace(" ", "_");
+  return {
+    id: shortcode,
+    name,
+    skins: [{ src }],
+  };
+}
+
+function eventToEmojiCollection(ev: NDKEvent): EmojiCollection {
+  return {
+    id: ev.tagId(),
+    name: ev.tagValue("d"),
+    emojis: ev.tags.filter((t) => t[0] === "emoji").map(tagToCustomEmoji),
+  };
+}
+
+async function getCustomEmoji(ndk: NDK, pubkey?: string) {
+  if (!pubkey) {
+    return [];
+  }
+  const emojiList = await ndk.fetchEvent({
+    kinds: [10_030],
+    authors: [pubkey],
+  });
+  const generalEmoji = emojiList ? tagValues(emojiList, "emoji") : [];
+  const general =
+    generalEmoji.length > 0
+      ? {
+          id: emojiList.tagId(),
+          name: "General",
+          emojis: generalEmoji.map(tagToCustomEmoji),
+        }
+      : null;
+  const addresses = (emojiList ? tagValues(emojiList, "a") : []).filter((a) =>
+    a.startsWith(`30030`),
+  );
+  if (addresses.length === 0) {
+    return [];
+  }
+  const filter = addressesToFilter(addresses);
+  const emojiCollections = await ndk.fetchEvents(filter);
+  const custom = [...emojiCollections].map(eventToEmojiCollection);
+  return general ? [general, ...custom] : custom;
+}
+
+function useCustomEmoji(pubkey?: string) {
+  const ndk = useNDK();
+  const query = useQuery({
+    queryKey: ["emojis", pubkey ? pubkey : "none"],
+    queryFn: () => getCustomEmoji(ndk, pubkey),
+  });
+  return query.data;
+}
+
+function EmojiPreview({ emoji }: { emoji: ReactionEmoji }) {
+  if (emoji.native) {
+    return <Text fontSize="md">{emoji.native}</Text>;
+  }
+
+  return <Emoji alt={emoji.name} src={emoji.src} />;
 }
 
 export default function ReactionPicker({
@@ -37,31 +130,70 @@ export default function ReactionPicker({
   isOpen,
   onClose,
 }: ReactionPickerProps) {
+  const ndk = useNDK();
   const { locale, formatMessage } = useIntl();
   const [isBusy, setIsBusy] = useState(false);
   const { colorMode } = useColorMode();
-  const toast = useFeedback();
-  const [emoji, setEmoji] = useState("❤️");
+  const toast = useToast();
+  const [emoji, setEmoji] = useState<ReactionEmoji>({ native: "❤️" });
   const session = useSession();
   const canSign = useSigner();
+  const sign = useSign();
+  const customEmoji = useCustomEmoji(session?.pubkey);
 
-  async function onEmojiSelect({ native }: Emoji) {
-    setEmoji(native);
+  async function onEmojiSelect(e: ReactionEmoji) {
+    setEmoji(e);
   }
 
   async function onReaction() {
     try {
       setIsBusy(true);
-      await event.react(emoji);
-      const msg = formatMessage(
-        {
-          id: "ngine.react-success",
-          description: "Success message for reactions",
-          defaultMessage: "Reacted with { emoji }",
-        },
-        { emoji },
-      );
-      toast.success(msg);
+      if (emoji.native) {
+        await event.react(emoji);
+        const msg = formatMessage(
+          {
+            id: "ngine.react-success",
+            description: "Success message for reactions",
+            defaultMessage: "Reacted with",
+          },
+          { emoji: emoji.native },
+        );
+        toast({
+          status: "success",
+          title: msg,
+          ...defaultOptions,
+        });
+      } else {
+        // todo: refactor useFeedback to allow custom render
+        const reaction = {
+          kind: NDKKind.Reaction,
+          content: emoji.shortcodes,
+          tags: [
+            ["emoji", emoji.id, emoji.src],
+            event.tagReference(),
+            ["p", event.pubkey],
+          ],
+          created_at: unixNow(),
+        };
+        const ev = await sign(reaction);
+        await ev.publish();
+        toast({
+          status: "success",
+          render: (props) => {
+            return (
+              <HStack color="white" bg="green.400" p={3}>
+                <FormattedMessage
+                  id="ngine.react-success"
+                  description="Success message for reactions"
+                  defaultMessage="Reacted with"
+                />
+                <EmojiPreview emoji={emoji} />
+              </HStack>
+            );
+          },
+          ...defaultOptions,
+        });
+      }
       onClose();
     } catch (e) {
       const msg = formatMessage({
@@ -69,7 +201,12 @@ export default function ReactionPicker({
         description: "Error message for reactions",
         defaultMessage: "Couldn't react",
       });
-      toast.error((e as Error)?.message, msg);
+      toast({
+        status: "error",
+        title: msg,
+        description: (e as Error)?.message,
+        ...defaultOptions,
+      });
     } finally {
       setIsBusy(false);
     }
@@ -91,12 +228,12 @@ export default function ReactionPicker({
         </ModalHeader>
         <ModalBody>
           <Stack align="center" justify="center">
-            <Text fontSize="4xl">{emoji}</Text>
             <Picker
               data={data}
               theme={colorMode}
               locale={locale}
               onEmojiSelect={onEmojiSelect}
+              custom={customEmoji}
             />
           </Stack>
         </ModalBody>
@@ -108,12 +245,14 @@ export default function ReactionPicker({
             colorScheme="brand"
             onClick={onReaction}
           >
-            <FormattedMessage
-              id="ngine.react-with"
-              description="React with button"
-              defaultMessage="React with { emoji }"
-              values={{ emoji }}
-            />
+            <HStack>
+              <FormattedMessage
+                id="ngine.react-with"
+                description="React with button"
+                defaultMessage="React with"
+              />
+              <EmojiPreview emoji={emoji} />
+            </HStack>
           </Button>
         </ModalFooter>
       </ModalContent>

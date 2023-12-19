@@ -27,6 +27,7 @@ import { tagValues } from "../tags";
 import { dedupe, parseJSON } from "../utils";
 import { EventProps } from "../types";
 import { Star, ChevronDown } from "../icons";
+import { addressesToFilter } from "../filter";
 
 async function queryReccommendedApps(
   ndk: NDK,
@@ -61,20 +62,7 @@ async function queryReccommendedApps(
     {} as Record<string, string[]>,
   );
 
-  const filter = Object.keys(recommendedApps).reduce(
-    (acc, a) => {
-      const [, pubkey, d] = a.split(":");
-      // @ts-ignore
-      acc.authors.push(pubkey);
-      acc["#d"].push(d);
-      return acc;
-    },
-    {
-      kinds: [NDKKind.AppHandler],
-      authors: [],
-      "#d": [],
-    } as NDKFilter,
-  );
+  const filter = addressesToFilter(Object.keys(recommendedApps));
 
   if (filter?.authors?.length === 0) {
     return [];
@@ -176,7 +164,7 @@ function AppMenuItem({
           {isPreferredApp ? (
             <HStack>
               <Text>{app.display_name || app.name}</Text>
-              <Icon as={Star} boxSize={3} color="chakra-subtle-text" />
+              <Icon as={Star} boxSize={4} color="chakra-subtle-text" />
             </HStack>
           ) : (
             <Text>{app.display_name || app.name}</Text>

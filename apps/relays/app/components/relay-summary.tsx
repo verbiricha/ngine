@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 
@@ -34,7 +34,7 @@ function Description({ info }: RelaySummaryProps) {
 
 function PayToRelay({ info }: RelaySummaryProps) {
   const { payments_url, fees } = info;
-  const admission = fees?.admission
+  const admission = fees?.admission;
   return (
     <>
       {payments_url && (

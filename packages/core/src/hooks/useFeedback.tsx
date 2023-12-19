@@ -11,7 +11,7 @@ interface Feedback {
   error: (message: string, title?: string) => void;
 }
 
-const defaultOptions = {
+export const defaultOptions = {
   position: "top-right" as ToastPosition,
   duration: 1500,
   isClosable: true,
