@@ -208,6 +208,7 @@ export default function Reactions({
   const { ref, inView } = useInView({
     threshold: 0,
     initialInView: false,
+    rootMargin: "50px 0px",
   });
   const events = useReactions(event, kinds, inView);
 
