@@ -18,10 +18,18 @@ export const Primary: Story = {
   },
 };
 
-export const Fiat: Story = {
-  name: "Fiat",
+export const USD: Story = {
+  name: "USD",
   args: {
     amount: 2100,
     currency: "USD",
+  },
+};
+
+export const EUR: Story = {
+  name: "EUR",
+  args: {
+    amount: 2100,
+    currency: "EUR",
   },
 };

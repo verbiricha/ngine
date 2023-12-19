@@ -19,19 +19,14 @@ export function formatSats(n: number) {
   }
 }
 
-export function formatSatAmount(n: number, currency: Currency, rates?: Rates) {
-  const hasFiatFormatting = currency === "USD" && rates;
-  if (hasFiatFormatting) {
-    const intl = new Intl.NumberFormat("en", {
-      style: "currency",
-      currency,
-      maximumFractionDigits: 2,
-    });
-    const amount = (n / 1e8) * rates.ask;
-    return intl.format(amount);
-  }
-
-  return formatSats(n);
+export function formatSatAmount(n: number, currency: Currency, rates: Rates) {
+  const intl = new Intl.NumberFormat("en", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 2,
+  });
+  const amount = (n / 1e8) * rates.ask;
+  return intl.format(amount);
 }
 
 export function formatRelativeTime(timestamp: number) {
