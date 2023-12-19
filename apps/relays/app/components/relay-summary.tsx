@@ -34,11 +34,12 @@ function Description({ info }: RelaySummaryProps) {
 
 function PayToRelay({ info }: RelaySummaryProps) {
   const { payments_url, fees } = info;
+  const admission = fees?.admission
   return (
     <>
       {payments_url && (
         <>
-          {fees?.admission && (
+          {admission?.length > 0 && (
             <HStack justify="space-between">
               <Heading fontSize="lg">
                 <FormattedMessage
@@ -50,9 +51,9 @@ function PayToRelay({ info }: RelaySummaryProps) {
               <Text>
                 <Amount
                   amount={
-                    fees.admission[0].unit === "msats"
-                      ? fees.admission[0].amount / 1000
-                      : fees.admission[0].amount
+                    admission[0].unit === "msats"
+                      ? admission[0].amount / 1000
+                      : admission[0].amount
                   }
                 />
               </Text>
