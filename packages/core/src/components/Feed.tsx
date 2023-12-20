@@ -7,9 +7,6 @@ import Event from "./Event";
 import useEvents from "../hooks/useEvents";
 import { Components } from "../types";
 
-// todo: configurable "Show more"
-// todo: configurable load more on scroll
-
 interface FeedProps extends Omit<StackProps, "filter"> {
   filter: NDKFilter | NDKFilter[];
   relays?: string[];
@@ -17,6 +14,8 @@ interface FeedProps extends Omit<StackProps, "filter"> {
   components?: Components;
   cacheUsage?: NDKSubscriptionCacheUsage;
   closeOnEose?: boolean;
+  hideShowMore?: boolean;
+  hideLoadMore?: boolean;
 }
 
 interface FeedPageProps extends Omit<FeedProps, "closeOnEose"> {
@@ -91,6 +90,8 @@ export default function Feed({
   pageSize = 20,
   closeOnEose = false,
   cacheUsage = NDKSubscriptionCacheUsage.ONLY_RELAY,
+  hideShowMore,
+  hideLoadMore,
   ...props
 }: FeedProps) {
   const [lastShown, setLastShown] = useState<string | undefined>();
@@ -137,7 +138,7 @@ export default function Feed({
   return (
     <>
       <Stack align="center" gap={3} {...props}>
-        {!closeOnEose && (
+        {!hideShowMore && !closeOnEose && (
           <Button
             isLoading={hidden.length === 0}
             w="100%"
@@ -156,7 +157,7 @@ export default function Feed({
         {toShow.map((e) => (
           <Event key={e.id} event={e} {...props} />
         ))}
-        {eose && events.length > 0 && (
+        {!hideLoadMore && eose && events.length > 0 && (
           <NextFeedPage
             filter={filter}
             relays={relays}

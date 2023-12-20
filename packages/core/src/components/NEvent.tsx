@@ -1,6 +1,5 @@
-import { Skeleton } from "@chakra-ui/react";
-
 import Event from "./Event";
+import Placeholder from "./Placeholder";
 import { EventProps, Components } from "../types";
 import useEvent from "../hooks/useEvent";
 
@@ -17,9 +16,5 @@ export default function NEvent({ id, relays, ...props }: NEventProps) {
     {},
     relays,
   );
-  return event ? (
-    <Event event={event} {...props} />
-  ) : (
-    <Skeleton height="32px" borderRadius="12px" />
-  );
+  return event ? <Event event={event} {...props} /> : <Placeholder />;
 }

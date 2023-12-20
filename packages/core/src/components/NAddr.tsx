@@ -1,6 +1,5 @@
-import { Flex, Box, Skeleton } from "@chakra-ui/react";
-
 import Event from "./Event";
+import Placeholder from "./Placeholder";
 import { Components } from "../types";
 import useEvent from "../hooks/useEvent";
 
@@ -29,12 +28,8 @@ export default function NAddr({
     relays,
   );
   return event ? (
-    <Flex my={3} justify="center">
-      <Event event={event} components={components} />
-    </Flex>
+    <Event event={event} components={components} />
   ) : (
-    <Box my={3}>
-      <Skeleton height="21px" />
-    </Box>
+    <Placeholder />
   );
 }

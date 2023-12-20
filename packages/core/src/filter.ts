@@ -1,4 +1,4 @@
-import { NDKFilter } from "@nostr-dev-kit/ndk";
+import { NDKKind, NDKFilter } from "@nostr-dev-kit/ndk";
 
 export function addressesToFilter(addresses: string[]): NDKFilter {
   const filter = addresses.reduce(
@@ -10,9 +10,9 @@ export function addressesToFilter(addresses: string[]): NDKFilter {
       return acc;
     },
     {
-      kinds: new Set(),
-      authors: new Set(),
-      "#d": new Set(),
+      kinds: new Set<NDKKind>(),
+      authors: new Set<string>(),
+      "#d": new Set<string>(),
     },
   );
   return {

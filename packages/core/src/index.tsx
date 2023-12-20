@@ -2,6 +2,8 @@ export * from "./types";
 export * from "./context";
 export * from "./time";
 export * from "./state";
+export * from "./tags";
+export * from "./filter";
 export { theme } from "./theme";
 
 // Icons as separate package?
@@ -10,6 +12,8 @@ export * from "./icons/props";
 
 // Hooks
 
+export { default as useAddress } from "./hooks/useAddress";
+export { default as useAddresses } from "./hooks/useAddresses";
 export { default as useFeedback } from "./hooks/useFeedback";
 export { default as useEvent } from "./hooks/useEvent";
 export { default as useEvents } from "./hooks/useEvents";
@@ -17,6 +21,7 @@ export { default as useProfile } from "./hooks/useProfile";
 
 // Components
 
+export { default as AsyncButton } from "./components/AsyncButton";
 export { default as Amount } from "./components/Amount";
 export { default as Article } from "./components/LongForm";
 export { default as Avatar } from "./components/Avatar";

@@ -2,7 +2,14 @@ import { useMemo, useState, useRef, type ChangeEvent } from "react";
 import { VoidApi } from "@void-cat/api";
 import { base64 } from "@scure/base";
 import { NDKPrivateKeySigner, NDKKind } from "@nostr-dev-kit/ndk";
-import { Stack, HStack, Button, Input, Avatar } from "@chakra-ui/react";
+import {
+  Stack,
+  HStack,
+  Button,
+  ButtonProps,
+  Input,
+  Avatar,
+} from "@chakra-ui/react";
 import { useIntl, FormattedMessage } from "react-intl";
 import { generatePrivateKey } from "nostr-tools";
 
@@ -22,12 +29,14 @@ interface ImagePickerProps {
   showPreview?: boolean;
   onImageUpload: (img: string) => void;
   defaultImage?: string;
+  buttonProps?: ButtonProps;
 }
 
 export default function ImagePicker({
   showPreview = true,
   onImageUpload,
   defaultImage,
+  buttonProps,
 }: ImagePickerProps) {
   const { formatMessage } = useIntl();
   // todo: use NDK signer if available?
@@ -63,6 +72,11 @@ export default function ImagePicker({
     return ``;
   }
 
+  function updateImage(img: string) {
+    setImage(img);
+    onImageUpload(img);
+  }
+
   async function onFileChange(ev: ChangeEvent<HTMLInputElement>) {
     const file = ev.target.files && ev.target.files[0];
     if (file) {
@@ -70,8 +84,7 @@ export default function ImagePicker({
         setIsUploading(true);
         const upload = await voidCatUpload(file);
         if (upload.url) {
-          setImage(upload.url);
-          onImageUpload(upload.url);
+          updateImage(upload.url);
           toast.success("File uploaded");
         }
         if (upload.error) {
@@ -125,12 +138,13 @@ export default function ImagePicker({
             description: "Placeholder for image upload URL field",
             defaultMessage: "Image URL",
           })}
-          onChange={(ev) => setImage(ev.target.value)}
+          onChange={(ev) => updateImage(ev.target.value)}
         />
         <Button
           colorScheme="brand"
-          isDisabled={isUploading}
+          isLoading={isUploading}
           onClick={() => ref.current?.click()}
+          {...buttonProps}
         >
           <FormattedMessage
             id="ngine.upload"

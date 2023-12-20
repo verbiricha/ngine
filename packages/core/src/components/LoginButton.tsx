@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   useDisclosure,
   Button,
@@ -94,9 +95,12 @@ function LoginDialog({ methods, ...rest }: LoginDialogProps) {
   );
 }
 
-interface LoginButtonProps extends LoginMenuProps, Pick<LoginProps, "onLogin"> {
+interface LoginButtonProps extends Pick<LoginProps, "onLogin"> {
   methods?: LoginMethod[];
   size?: string;
+  menuProps?: LoginMenuProps;
+  buttonProps?: any;
+  children: ReactNode;
 }
 
 export default function LoginButton({
@@ -104,12 +108,14 @@ export default function LoginButton({
   children,
   onLogin,
   size,
+  menuProps,
+  buttonProps,
 }: LoginButtonProps) {
   const session = useSession();
   const modal = useDisclosure();
 
   return session ? (
-    <LoginMenu>{children}</LoginMenu>
+    <LoginMenu {...menuProps}>{children}</LoginMenu>
   ) : (
     <>
       <LoginDialog methods={methods} {...modal} onLogin={onLogin} />
@@ -118,6 +124,7 @@ export default function LoginButton({
         colorScheme="brand"
         onClick={modal.onOpen}
         size={size}
+        {...buttonProps}
       >
         <FormattedMessage
           id="ngine.get-started"
