@@ -149,7 +149,7 @@ export default function NewBadge() {
             showPreview={false}
             buttonProps={{ variant: "outline", isDisabled: isMining }}
             inputProps={{ isDisabled: isMining }}
-            onImageUpload={setImage}
+            onImagePick={setImage}
           />
           <FormHelperText>
             We recommend a WebP or a PNG of no less than 1024x1024 pixels.
@@ -162,7 +162,7 @@ export default function NewBadge() {
             showPreview={false}
             buttonProps={{ variant: "outline", isDisabled: isMining }}
             inputProps={{ isDisabled: isMining }}
-            onImageUpload={setThumbnail}
+            onImagePick={setThumbnail}
           />
         </FormControl>
         <FormControl>

@@ -2,15 +2,13 @@ import { useState } from "react";
 import { IconButton } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useIntl } from "react-intl";
-import { useAtom, useAtomValue } from "jotai";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import {
   useFeedback,
   useSign,
   useSigner,
   useRelays,
-  relaysAtom,
-  relayListAtom,
+  useRelaySettings,
   unixNow,
 } from "@ngine/core";
 
@@ -22,8 +20,7 @@ function RemoveRelay({ url }: { url: string }) {
   const [isBusy, setIsBusy] = useState(false);
   const canSign = useSigner();
   const sign = useSign();
-  const relays = useAtomValue(relaysAtom);
-  const [, setRelayList] = useAtom(relayListAtom);
+  const relays = useRelaySettings();
 
   async function removeRelay() {
     const ev = {
@@ -37,7 +34,6 @@ function RemoveRelay({ url }: { url: string }) {
       const signed = await sign(ev);
       if (signed) {
         await signed.publish();
-        setRelayList(signed.rawEvent());
         toast.success(
           formatMessage(
             {
@@ -87,8 +83,7 @@ function AddRelay({ url }: { url: string }) {
   const toast = useFeedback();
   const canSign = useSigner();
   const sign = useSign();
-  const relays = useAtomValue(relaysAtom);
-  const [, setRelayList] = useAtom(relayListAtom);
+  const relays = useRelaySettings();
 
   async function addRelay() {
     const ev = {
@@ -102,7 +97,6 @@ function AddRelay({ url }: { url: string }) {
       const signed = await sign(ev);
       if (signed) {
         await signed.publish();
-        setRelayList(signed.rawEvent());
         toast.success(
           formatMessage(
             {

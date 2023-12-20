@@ -1,36 +1,38 @@
-import { Text, Icon, TextProps, ImageProps } from "@chakra-ui/react";
+import { Text, Icon, TextProps, ImageProps, HStack } from "@chakra-ui/react";
 import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 
 import Emoji from "./Emoji";
-import { Heart, Repost } from "../icons";
+import { Heart, Repost, Bookmark } from "../icons";
+import { REPOSTS, BOOKMARKS } from "../nostr/kinds";
+import { extractCustomEmoji } from "../nostr/emoji";
 
-interface ReactionIconProps
-  extends Pick<ImageProps, "size">,
-    Pick<TextProps, "fontSize"> {
+interface ReactionIconProps extends Pick<TextProps, "fontSize"> {
+  boxSize?: number;
   event: NDKEvent;
 }
 
 export default function ReactionIcon({
   event,
-  size = 4,
+  boxSize = 4,
   fontSize = "md",
 }: ReactionIconProps) {
-  if (event.kind === NDKKind.Repost || event.kind === NDKKind.GenericRepost) {
-    return <Icon as={Repost} boxSize={size} />;
+  if (REPOSTS.includes(event.kind as number)) {
+    return <Icon as={Repost} boxSize={boxSize} />;
   }
 
-  const emoji = event.content;
-  const customEmoji = event.tags.find(
-    (t) =>
-      emoji &&
-      t[0] === "emoji" &&
-      t[1] === `${emoji.slice(1, emoji?.length - 1)}`,
-  );
-  return customEmoji ? (
-    <Emoji alt={customEmoji[1]} boxSize={size} src={customEmoji[2]} />
-  ) : emoji && !["+", "-"].includes(emoji) ? (
-    <Text fontSize={fontSize}>{emoji}</Text>
+  if (BOOKMARKS.includes(event.kind as number)) {
+    return <Icon as={Bookmark} boxSize={boxSize} />;
+  }
+
+  const hasCustomEmoji = event.tags.find((t) => t[0] === "emoji");
+  return hasCustomEmoji ? (
+    <HStack display="inline">
+      {extractCustomEmoji([event.content], event.tags, boxSize)}
+    </HStack>
+  ) : !["+", "-"].includes(event.content) ? (
+    <Text fontSize={fontSize}>{event.content}</Text>
   ) : (
-    <Icon as={Heart} boxSize={size} />
+    // todo: dislike
+    <Icon as={Heart} boxSize={boxSize} />
   );
 }

@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import {
   HStack,
-  Icon,
   Image,
   Text,
   Modal,
@@ -22,10 +21,11 @@ import { FormattedMessage } from "react-intl";
 
 import Amount from "./Amount";
 import User from "./User";
-import { Repost as RepostIcon, Heart } from "../icons";
+import ReactionIcon from "./ReactionIcon";
 import { ZapRequest } from "../nostr/nip57";
 import { EventProps } from "../types";
 import { ReactionEvents } from "../hooks/useReactions";
+import { REPOSTS, BOOKMARKS } from "../nostr/kinds";
 
 function Zap({ zap }: { zap: ZapRequest }) {
   return (
@@ -39,23 +39,10 @@ function Zap({ zap }: { zap: ZapRequest }) {
 }
 
 function Like({ event }: EventProps) {
-  const emoji = event.content;
-  const customEmoji = event?.tags.find(
-    (t) =>
-      emoji &&
-      t[0] === "emoji" &&
-      t[1] === `${emoji.slice(1, emoji?.length - 1)}`,
-  );
   return (
     <HStack justifyContent="space-between">
       <User pubkey={event.pubkey} />
-      {customEmoji ? (
-        <Image boxSize={5} src={customEmoji[2]} />
-      ) : !["+", "-"].includes(emoji) ? (
-        <Text fontSize="lg">{emoji}</Text>
-      ) : (
-        <Icon as={Heart} boxSize={5} />
-      )}
+      <ReactionIcon event={event} boxSize={5} fontSize="lg" />
     </HStack>
   );
 }
@@ -64,7 +51,16 @@ function Repost({ event }: EventProps) {
   return (
     <HStack justifyContent="space-between">
       <User pubkey={event.pubkey} />
-      <Icon as={RepostIcon} boxSize={5} />
+      <ReactionIcon event={event} boxSize={5} fontSize="lg" />
+    </HStack>
+  );
+}
+
+function Bookmark({ event }: EventProps) {
+  return (
+    <HStack justifyContent="space-between">
+      <User pubkey={event.pubkey} />
+      <ReactionIcon event={event} boxSize={5} fontSize="lg" />
     </HStack>
   );
 }
@@ -95,13 +91,14 @@ interface ReactionsModalProps {
   events: ReactionEvents;
 }
 
+// todo: bookmarks
 export default function ReactionsModal({
   isOpen,
   events,
   kinds,
   onClose,
 }: ReactionsModalProps) {
-  const { zaps, reposts, reactions } = events;
+  const { zaps, reposts, reactions, bookmarks } = events;
   const { zapRequests } = zaps;
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -144,7 +141,7 @@ export default function ReactionsModal({
                     </Tab>
                   );
                 }
-                if (k === NDKKind.Repost || k === NDKKind.GenericRepost) {
+                if (REPOSTS.includes(k)) {
                   return (
                     <Tab key={`${k}-tab`}>
                       <FormattedMessage
@@ -152,6 +149,18 @@ export default function ReactionsModal({
                         description="Reposts count"
                         defaultMessage="Reposts ({ count })"
                         values={{ count: reposts.length }}
+                      />
+                    </Tab>
+                  );
+                }
+                if (BOOKMARKS.includes(k)) {
+                  return (
+                    <Tab key={`${k}-tab`}>
+                      <FormattedMessage
+                        id="ngine.bookmarks-count"
+                        description="Bookmarks count"
+                        defaultMessage="Bookmarks ({ count })"
+                        values={{ count: bookmarks.length }}
                       />
                     </Tab>
                   );
@@ -173,7 +182,7 @@ export default function ReactionsModal({
                     </TabPanel>
                   );
                 }
-                if (k === NDKKind.Repost || k === NDKKind.GenericRepost) {
+                if (REPOSTS.includes(k)) {
                   return (
                     <TabPanel key={k}>
                       <ReactionsList>
@@ -190,6 +199,17 @@ export default function ReactionsModal({
                       <ReactionsList>
                         {reactions.map((e) => (
                           <Like key={e.id} event={e} />
+                        ))}
+                      </ReactionsList>
+                    </TabPanel>
+                  );
+                }
+                if (BOOKMARKS.includes(k)) {
+                  return (
+                    <TabPanel key={k}>
+                      <ReactionsList>
+                        {bookmarks.map((e) => (
+                          <Bookmark key={e.id} event={e} />
                         ))}
                       </ReactionsList>
                     </TabPanel>

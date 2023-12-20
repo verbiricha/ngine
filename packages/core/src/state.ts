@@ -50,6 +50,10 @@ export function useRates() {
   return useExchangeRate(currency);
 }
 
+export function useRelaySettings() {
+  return useAtomValue(relaysAtom);
+}
+
 export function useRelays() {
   const relays = useAtomValue(relaysAtom);
   return relays.map((r) => r.url);

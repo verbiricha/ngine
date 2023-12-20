@@ -3,8 +3,9 @@ import { useMemo } from "react";
 import Event from "./Event";
 import Placeholder from "./Placeholder";
 import { EventProps } from "../types";
+import useAddress from "../hooks/useAddress";
 
-interface AddressProps extends EventProps {
+interface AddressProps extends Omit<EventProps, "event"> {
   address: string;
 }
 

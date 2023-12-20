@@ -25,7 +25,7 @@ export function ReactionIcon({ event, boxSize, fontSize }: ReactionIconProps) {
   if (event.kind === NDKKind.Repost || event.kind === NDKKind.GenericRepost) {
     return <Icon as={Repost} boxSize={boxSize} />;
   }
-
+  // fixme: can be multiple emoji
   const emoji = event.content;
   const customEmoji = event.tags.find(
     (t) =>

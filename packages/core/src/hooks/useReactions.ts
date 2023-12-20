@@ -63,7 +63,9 @@ export default function useReactions(
       events.filter(
         (e) =>
           e.kind === NDKKind.BookmarkList ||
-          e.kind === NDKKind.CategorizedBookmarkList,
+          e.kind === NDKKind.CategorizedBookmarkList ||
+          e.kind === NDKKind.RelayList ||
+          e.kind === NDKKind.EmojiList,
       ),
     [events],
   );

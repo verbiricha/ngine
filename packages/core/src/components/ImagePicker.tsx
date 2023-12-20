@@ -28,7 +28,7 @@ type UploadResult = {
 
 interface ImagePickerProps {
   showPreview?: boolean;
-  onImageUpload: (img: string) => void;
+  onImagePick: (img: string) => void;
   defaultImage?: string;
   buttonProps?: ButtonProps;
   inputProps?: InputProps;
@@ -36,7 +36,7 @@ interface ImagePickerProps {
 
 export default function ImagePicker({
   showPreview = true,
-  onImageUpload,
+  onImagePick,
   defaultImage,
   inputProps,
   buttonProps,
@@ -77,7 +77,7 @@ export default function ImagePicker({
 
   function updateImage(img: string) {
     setImage(img);
-    onImageUpload(img);
+    onImagePick(img);
   }
 
   async function onFileChange(ev: ChangeEvent<HTMLInputElement>) {

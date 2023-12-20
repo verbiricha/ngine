@@ -7,7 +7,7 @@ import {
   useAddresses,
 } from "@ngine/core";
 
-import { getPow } from "@core/rarity"
+import { getPow } from "@core/rarity";
 
 export default function useBadges(pubkey: string) {
   const profile = useLatestEvent({

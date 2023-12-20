@@ -11,7 +11,9 @@ export type ReactionKind =
   | NDKKind.Repost
   | NDKKind.GenericRepost
   | NDKKind.BookmarkList
-  | NDKKind.CategorizedBookmarkList;
+  | NDKKind.CategorizedBookmarkList
+  | NDKKind.RelayList
+  | NDKKind.EmojiList;
 
 // Relays
 

@@ -23,6 +23,7 @@ export { default as useProfile } from "./hooks/useProfile";
 // Components
 
 export { default as AsyncButton } from "./components/AsyncButton";
+export { default as Address } from "./components/Address";
 export { default as Amount } from "./components/Amount";
 export { default as Article } from "./components/LongForm";
 export { default as Avatar } from "./components/Avatar";
@@ -30,6 +31,7 @@ export { default as AvatarGroup } from "./components/AvatarGroup";
 export { default as Blockquote } from "./components/Blockquote";
 export { default as Event } from "./components/Event";
 export { default as Feed } from "./components/Feed";
+export { default as Emoji } from "./components/Emoji";
 export { default as FollowButton } from "./components/FollowButton";
 export { default as ImagePicker } from "./components/ImagePicker";
 export { default as Login } from "./components/Login";
@@ -41,6 +43,8 @@ export { default as NAddr } from "./components/NAddr";
 export { default as NEvent } from "./components/NEvent";
 export { default as Onboarding } from "./components/Onboarding";
 export { default as PubkeyPicker } from "./components/PubkeyPicker";
+export { default as Reactions } from "./components/Reactions";
+export { default as ReactionIcon } from "./components/ReactionIcon";
 export { default as RecommendedAppMenu } from "./components/RecommendedAppMenu";
 export { default as User } from "./components/User";
 export { default as Username } from "./components/Username";

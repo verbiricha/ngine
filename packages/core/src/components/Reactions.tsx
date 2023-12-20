@@ -23,14 +23,13 @@ import { ReactionIcon } from "./Reaction";
 import ReactionPicker from "./ReactionPicker";
 import ZapModal from "./ZapModal";
 import { useSession } from "../state";
-import { useSigner } from "../context";
+import { useNDK, useSigner, useSign } from "../context";
 import { EventProps, ReactionKind } from "../types";
+import { unixNow } from "../time";
 import { Zap, Heart, Reply, Repost, Bookmark } from "../icons";
 import { ZapRequest } from "../nostr/nip57";
-import useReactions, {
-  ReactionEvents,
-  ReactionKind,
-} from "../hooks/useReactions";
+import { BOOKMARKS, REPOSTS } from "../nostr/kinds";
+import useReactions, { ReactionEvents } from "../hooks/useReactions";
 
 const defaultReactions: ReactionKind[] = [NDKKind.Zap, NDKKind.Reaction];
 
@@ -69,13 +68,16 @@ function ReactionCount({ icon, count, reaction, ...rest }: ReactionCountProps) {
 interface ReactionCountsProps extends EventProps, StackProps {
   kinds: ReactionKind[];
   events: ReactionEvents;
+  bookmarkList?: number;
 }
 
+// todo: bookmark, parameterisable bookmark kind and bookmark list
 export function ReactionCounts({
   event,
   kinds,
   components,
   events,
+  bookmarkList = NDKKind.BookmarkList,
   ...rest
 }: ReactionCountsProps) {
   const zapModal = useDisclosure();
@@ -84,11 +86,40 @@ export function ReactionCounts({
   const replyModal = useDisclosure();
   const session = useSession();
   const pubkey = session?.pubkey;
+  const ndk = useNDK();
   const canSign = useSigner();
+  const sign = useSign();
   const { zaps, reactions, replies, reposts, bookmarks } = events;
   const { zapRequests, total } = zaps;
-  const hasBookmarks = kinds.includes(NDKKind.BookmarkList);
+  const hasBookmarks = kinds.some((k) => BOOKMARKS.includes(k));
   const hasReposts = kinds.includes(NDKKind.Repost);
+
+  async function bookmarkEvent() {
+    if (pubkey) {
+      try {
+        const bookmarks = await ndk.fetchEvent({
+          kinds: [bookmarkList],
+          authors: [pubkey],
+        });
+        // todo: toggle
+        const newBookmarks = {
+          kind: bookmarkList,
+          tags: bookmarks
+            ? bookmarks.tags.concat([event.tagReference()])
+            : [event.tagReference()],
+          content: bookmarks?.content || "",
+          created_at: unixNow(),
+        };
+        const ev = await sign(newBookmarks);
+        if (ev) {
+          await ev.publish();
+        }
+        // todo: toast
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
 
   return (
     <HStack color="chakra-subtle-text" fontSize="sm" spacing={5} {...rest}>
@@ -145,16 +176,17 @@ export function ReactionCounts({
                   onClick={canSign ? reactionModal.onOpen : undefined}
                   cursor={canSign ? "pointer" : "auto"}
                 />
-                {reactionModal.isOpen && (
+                {reactionModal.isOpen && session?.pubkey && (
                   <ReactionPicker
                     event={event}
                     components={components}
+                    pubkey={session.pubkey}
                     {...reactionModal}
                   />
                 )}
               </Box>
             );
-          } else if (k === NDKKind.Repost || k === NDKKind.GenericRepost) {
+          } else if (REPOSTS.includes(k)) {
             const repost = reposts.find((r) => r.pubkey === pubkey);
             return (
               <Box key={k}>
@@ -174,19 +206,17 @@ export function ReactionCounts({
                 )}
               </Box>
             );
-          } else if (
-            k === NDKKind.BookmarkList ||
-            k === NDKKind.CategorizedBookmarkList
-          ) {
+          } else if (BOOKMARKS.includes(k)) {
             const bookmark = bookmarks.find((r) => r.pubkey === pubkey);
+            const canBookmark = canSign && !bookmark;
             return (
               <Box key={k}>
                 <ReactionCount
                   icon={Bookmark}
                   count={bookmarks.length}
                   reaction={bookmark}
-                  //onClick={canSign ? repostModal.onOpen : undefined}
-                  //cursor={canSign ? "pointer" : "auto"}
+                  onClick={canBookmark ? bookmarkEvent : undefined}
+                  cursor={canBookmark ? "pointer" : "auto"}
                 />
               </Box>
             );
@@ -198,23 +228,31 @@ export function ReactionCounts({
 
 interface ReactionsProps extends EventProps {
   kinds?: ReactionKind[];
+  bookmarkList?: number;
 }
 
 export default function Reactions({
   event,
   kinds = defaultReactions,
+  bookmarkList = NDKKind.BookmarkList,
   ...props
 }: ReactionsProps) {
   const { ref, inView } = useInView({
     threshold: 0,
     initialInView: false,
-    rootMargin: "50px 0px",
+    rootMargin: "120px 0px",
   });
   const events = useReactions(event, kinds, inView);
 
   return (
     <HStack w="100%" align="center" justifyContent="space-between" ref={ref}>
-      <ReactionCounts event={event} kinds={kinds} events={events} {...props} />
+      <ReactionCounts
+        event={event}
+        kinds={kinds}
+        events={events}
+        bookmarkList={bookmarkList}
+        {...props}
+      />
       <EventMenu event={event} kinds={kinds} events={events} />
     </HStack>
   );

@@ -13,14 +13,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useIntl, FormattedMessage } from "react-intl";
-import { useAtom, useAtomValue } from "jotai";
-import {
-  unixNow,
-  useSign,
-  useSigner,
-  relaysAtom,
-  relayListAtom,
-} from "@ngine/core";
+import { unixNow, useSign, useSigner, useRelaySettings } from "@ngine/core";
 import { NDKKind, NDKRelay } from "@nostr-dev-kit/ndk";
 
 import RelayIcon from "./relay-icon";
@@ -32,8 +25,7 @@ export default function MyRelays() {
   const [relay, setRelay] = useState("");
   const sign = useSign();
   const canSign = useSigner();
-  const relays = useAtomValue(relaysAtom);
-  const [, setRelayList] = useAtom(relayListAtom);
+  const relays = useRelaySettings();
   const { formatMessage } = useIntl();
 
   async function addRelay() {
@@ -54,7 +46,6 @@ export default function MyRelays() {
       const signed = await sign(ev);
       if (signed) {
         await signed.publish();
-        setRelayList(signed.rawEvent());
         setRelay("");
       }
       await conn.disconnect();

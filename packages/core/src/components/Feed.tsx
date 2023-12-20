@@ -90,8 +90,8 @@ export default function Feed({
   pageSize = 20,
   closeOnEose = false,
   cacheUsage = NDKSubscriptionCacheUsage.ONLY_RELAY,
-  hideShowMore,
-  hideLoadMore,
+  hideShowMore = false,
+  hideLoadMore = false,
   ...props
 }: FeedProps) {
   const [lastShown, setLastShown] = useState<string | undefined>();

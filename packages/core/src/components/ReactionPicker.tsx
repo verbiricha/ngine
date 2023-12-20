@@ -23,7 +23,6 @@ import NDK, {
   NDKEvent,
   NDKKind,
   NDKFilter,
-  NDKSubscriptionCacheUsage,
   NostrEvent,
 } from "@nostr-dev-kit/ndk";
 
@@ -32,6 +31,7 @@ import Emoji from "./Emoji";
 import { useNDK, useSigner, useSign } from "../context";
 import { useSession } from "../state";
 import { defaultOptions } from "../hooks/useFeedback";
+import useLatestEvent from "../hooks/useLatestEvent";
 import { EventProps, Tag } from "../types";
 import { tagValues } from "../tags";
 import { unixNow } from "../time";
@@ -40,6 +40,7 @@ import { addressesToFilter } from "../filter";
 interface ReactionPickerProps extends EventProps {
   isOpen: boolean;
   onClose(): void;
+  pubkey: string;
 }
 
 interface ReactionEmoji {
@@ -79,14 +80,7 @@ function eventToEmojiCollection(ev: NDKEvent): EmojiCollection {
   };
 }
 
-async function getCustomEmoji(ndk: NDK, pubkey?: string) {
-  if (!pubkey) {
-    return [];
-  }
-  const emojiList = await ndk.fetchEvent({
-    kinds: [10_030],
-    authors: [pubkey],
-  });
+async function getCustomEmoji(ndk: NDK, emojiList: NDKEvent) {
   const generalEmoji = emojiList ? tagValues(emojiList, "emoji") : [];
   const general =
     generalEmoji.length > 0
@@ -96,8 +90,8 @@ async function getCustomEmoji(ndk: NDK, pubkey?: string) {
           emojis: generalEmoji.map(tagToCustomEmoji),
         }
       : null;
-  const addresses = (emojiList ? tagValues(emojiList, "a") : []).filter((a) =>
-    a.startsWith(`30030`),
+  const addresses = tagValues(emojiList, "a").filter((a) =>
+    a.startsWith(`${NDKKind.EmojiSet}`),
   );
   if (addresses.length === 0) {
     return [];
@@ -108,11 +102,11 @@ async function getCustomEmoji(ndk: NDK, pubkey?: string) {
   return general ? [general, ...custom] : custom;
 }
 
-function useCustomEmoji(pubkey?: string) {
+function useCustomEmoji(emojiList?: NDKEvent) {
   const ndk = useNDK();
   const query = useQuery({
-    queryKey: ["emojis", pubkey ? pubkey : "none"],
-    queryFn: () => getCustomEmoji(ndk, pubkey),
+    queryKey: ["emojis", emojiList ? emojiList.id : "none"],
+    queryFn: () => getCustomEmoji(ndk, emojiList),
   });
   return query.data;
 }
@@ -129,6 +123,7 @@ export default function ReactionPicker({
   event,
   isOpen,
   onClose,
+  pubkey,
 }: ReactionPickerProps) {
   const ndk = useNDK();
   const { locale, formatMessage } = useIntl();
@@ -139,7 +134,11 @@ export default function ReactionPicker({
   const session = useSession();
   const canSign = useSigner();
   const sign = useSign();
-  const customEmoji = useCustomEmoji(session?.pubkey);
+  const emojiList = useLatestEvent({
+    kinds: [NDKKind.EmojiList],
+    authors: [session?.pubkey],
+  });
+  const customEmoji = useCustomEmoji(emojiList);
 
   async function onEmojiSelect(e: ReactionEmoji) {
     setEmoji(e);

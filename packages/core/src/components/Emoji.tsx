@@ -7,7 +7,7 @@ interface EmojiProps extends ImageProps {
 export default function Emoji({ alt, boxSize = 4, ...props }: EmojiProps) {
   return (
     <Tooltip label={alt}>
-      <Image alt={alt} boxSize={boxSize} {...props} />
+      <Image alt={alt} boxSize={boxSize} {...props} display="inline" mb={-1} />
     </Tooltip>
   );
 }

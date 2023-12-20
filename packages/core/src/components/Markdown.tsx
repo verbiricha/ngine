@@ -23,6 +23,7 @@ import NAddr from "./NAddr";
 import Username from "./Username";
 import { useLinks, useLinkComponent } from "../context";
 import { Links, LinkComponent, Tags, Fragment, Components } from "../types";
+import { extractCustomEmoji } from "../nostr/emoji";
 
 // eslint-disable-next-line no-useless-escape
 const FileExtensionRegex = /\.([\w]+)$/i;
@@ -302,33 +303,6 @@ function extractHashtags(
               </Link>
             ) : (
               i
-            );
-          } else {
-            return i;
-          }
-        });
-      }
-      return f;
-    })
-    .flat();
-}
-
-function extractCustomEmoji(fragments: Fragment[], tags: Tags) {
-  return fragments
-    .map((f) => {
-      if (typeof f === "string") {
-        return f.split(/:(\w+):/g).map((i) => {
-          const t = tags.find((a) => a[0] === "emoji" && a[1] === i);
-          if (t) {
-            return (
-              <Emoji
-                borderRadius="none"
-                display="inline"
-                fit="contain"
-                alt={t[1]}
-                src={t[2]}
-                boxSize={5}
-              />
             );
           } else {
             return i;

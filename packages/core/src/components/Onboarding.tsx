@@ -115,7 +115,7 @@ function BioStep() {
 
 function AvatarStep() {
   const [profile, setProfile] = useAtom(profileAtom);
-  function onImageUpload(img: string) {
+  function onImagePick(img: string) {
     setProfile({ ...profile, picture: img });
   }
   return (
@@ -127,10 +127,7 @@ function AvatarStep() {
           defaultMessage="Add a profile image"
         />
       </FormLabel>
-      <ImagePicker
-        defaultImage={profile.picture}
-        onImageUpload={onImageUpload}
-      />
+      <ImagePicker defaultImage={profile.picture} onImagePick={onImagePick} />
     </FormControl>
   );
 }
