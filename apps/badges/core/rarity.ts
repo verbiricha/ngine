@@ -20,10 +20,10 @@ export function getPow(id: string) {
   return nip13.getPow(id);
 }
 
-const LEGENDARY = 128;
-const EPIC = 64;
-const SUPER_RARE = 32;
-const RARE = 21;
+const LEGENDARY = 64;
+const EPIC = 32;
+const SUPER_RARE = 21;
+const RARE = 12;
 
 export function getMinPow(r: Rarities): number {
   if (r === Rarities.Legendary) {

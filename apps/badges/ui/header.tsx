@@ -26,6 +26,7 @@ import { nip19 } from "nostr-tools";
 import ColorModeSwitch from "./color-mode-switch";
 import Link from "./link";
 import Avatar from "./avatar";
+import { maxWidth } from "./const";
 
 import { useIntl } from "react-intl";
 
@@ -39,7 +40,7 @@ export default function Header() {
       alignItems="center"
       justifyContent="space-between"
       width="100%"
-      maxWidth="60rem"
+      maxWidth={maxWidth}
       py={2}
       px={4}
     >

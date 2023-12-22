@@ -42,7 +42,7 @@ export default function BadgeAward({ award, profile }: BadgeAwardProps) {
         <AvatarGroup pubkeys={pubkeys} />
       </HStack>
       {badge && <Badge event={badge} />}
-      {badge && profile && session?.pubkey && (
+      {badge && profile && isForMe && (
         <BadgeSettings
           badge={badge}
           award={award}
