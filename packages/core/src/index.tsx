@@ -17,6 +17,7 @@ export { default as useAddresses } from "./hooks/useAddresses";
 export { default as useFeedback } from "./hooks/useFeedback";
 export { default as useEvent } from "./hooks/useEvent";
 export { default as useEvents } from "./hooks/useEvents";
+export { default as useLatestEvent } from "./hooks/useLatestEvent";
 export { default as useProfile } from "./hooks/useProfile";
 
 // Components

@@ -24,10 +24,12 @@ import Grid from "./grid";
 import useBadges from "@hooks/useBadges";
 
 function ProfileTabs({
+  profile,
   badges,
   awards,
   created,
 }: {
+  profile: NDKEvent;
   badges: NDKEvent[];
   awards: NDKEvent[];
   created: NDKEvent[];
@@ -51,7 +53,7 @@ function ProfileTabs({
         <TabPanel px={0}>
           <Grid>
             {awards.map((e) => (
-              <BadgeAward key={e.id} event={e} />
+              <BadgeAward key={e.id} award={e} profile={profile} />
             ))}
           </Grid>
         </TabPanel>
@@ -68,7 +70,7 @@ function ProfileTabs({
 }
 
 export default function Profile({ pubkey }: { pubkey: string }) {
-  const profile = useProfile(pubkey);
+  const user = useProfile(pubkey);
   const { events: created } = useEvents(
     {
       kinds: [NDKKind.BadgeDefinition],
@@ -78,7 +80,7 @@ export default function Profile({ pubkey }: { pubkey: string }) {
       cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
     },
   );
-  const { badges, awards } = useBadges(pubkey);
+  const { profile, badges, awards } = useBadges(pubkey);
   const highlighted = badges[0];
   return (
     <Stack gap={6}>
@@ -104,9 +106,9 @@ export default function Profile({ pubkey }: { pubkey: string }) {
                 md: "left",
               }}
             />
-            {profile?.about && (
+            {user?.about && (
               <Markdown
-                content={profile.about}
+                content={user.about}
                 color="chakra-subtle-text"
                 fontSize="sm"
                 maxW="sm"
@@ -120,7 +122,12 @@ export default function Profile({ pubkey }: { pubkey: string }) {
         </Flex>
         {highlighted && <Badge key={highlighted.id} event={highlighted} />}
       </Flex>
-      <ProfileTabs badges={badges} awards={awards} created={created} />
+      <ProfileTabs
+        profile={profile}
+        badges={badges}
+        awards={awards}
+        created={created}
+      />
     </Stack>
   );
 }

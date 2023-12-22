@@ -122,12 +122,14 @@ function Awardees({ event }: { event: NDKEvent }) {
 
 interface BadgeProps extends EventProps, StackProps {
   showDetails?: boolean;
+  showSettings?: boolean;
   linkToBadge?: boolean;
 }
 
 export default function Badge({
   event,
   showDetails,
+  showSettings,
   linkToBadge = true,
   ...props
 }: BadgeProps) {
@@ -165,7 +167,7 @@ export default function Badge({
           src={image || thumbnail}
           width={size}
           height={size}
-          fit="cover"
+          fit="contain"
         />
         <Heading fontSize="lg" fontWeight={700} textAlign="center">
           {name}
