@@ -4,19 +4,24 @@ import { nip19, nip05 } from "nostr-tools";
 import { useIntl } from "react-intl";
 
 interface PubkeyPickerProps extends Omit<InputProps, "value" | "onChange"> {
-  onPubkey(npub: string): void;
+  onPubkey(pk: string): void;
+  cleanAfterAdding?: boolean;
 }
 
-export default function PubkeyPicker({ onPubkey, ...rest }: PubkeyPickerProps) {
+export default function PubkeyPicker({
+  onPubkey,
+  cleanAfterAdding,
+  ...rest
+}: PubkeyPickerProps) {
   const { formatMessage } = useIntl();
   const [npubLike, setNpubLike] = useState("");
-  const [npub, setNpub] = useState<string | undefined>();
+  const [pk, setPk] = useState<string | undefined>();
 
   async function onChangeNpub(maybeNpub: string) {
     setNpubLike(maybeNpub);
 
     if (maybeNpub === "") {
-      setNpub();
+      setPk(undefined);
       return;
     }
 
@@ -24,9 +29,9 @@ export default function PubkeyPicker({ onPubkey, ...rest }: PubkeyPickerProps) {
       if (maybeNpub.includes("@")) {
         const profile = await nip05.queryProfile(maybeNpub);
         if (profile) {
-          setNpub(profile.pubkey);
+          setPk(profile.pubkey);
         } else {
-          setNpub();
+          setPk(undefined);
         }
       } else if (
         maybeNpub.startsWith("npub") ||
@@ -34,11 +39,11 @@ export default function PubkeyPicker({ onPubkey, ...rest }: PubkeyPickerProps) {
       ) {
         const decoded = nip19.decode(maybeNpub);
         if (decoded.type === "npub") {
-          setNpub(decoded.data);
+          setPk(decoded.data);
         } else if (decoded.type === "nprofile") {
-          setNpub(decoded.data.pubkey);
+          setPk(decoded.data.pubkey);
         } else {
-          setNpub();
+          setPk(undefined);
         }
       }
     } catch (error) {
@@ -47,8 +52,13 @@ export default function PubkeyPicker({ onPubkey, ...rest }: PubkeyPickerProps) {
   }
 
   useEffect(() => {
-    onPubkey(npub);
-  }, [npub]);
+    if (pk) {
+      onPubkey(pk);
+      if (cleanAfterAdding) {
+        setNpubLike("");
+      }
+    }
+  }, [pk]);
 
   return (
     <Input

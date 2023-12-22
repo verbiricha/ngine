@@ -39,6 +39,7 @@ export { default as Note } from "./components/Note";
 export { default as NAddr } from "./components/NAddr";
 export { default as NEvent } from "./components/NEvent";
 export { default as Onboarding } from "./components/Onboarding";
+export { default as PubkeyPicker } from "./components/PubkeyPicker";
 export { default as RecommendedAppMenu } from "./components/RecommendedAppMenu";
 export { default as User } from "./components/User";
 export { default as Username } from "./components/Username";

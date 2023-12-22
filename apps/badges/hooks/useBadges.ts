@@ -7,26 +7,24 @@ export default function useBadges(pubkey: string) {
   const event = useEvent(
     { kinds: [NDKKind.ProfileBadge], authors: [pubkey] },
     {
-      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+      cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
     },
   );
   const addresses = event ? tagValues(event, "a") : [];
-  const awards = event ? tagValues(event, "e") : [];
   const badgeAdresses = [...new Set(addresses)];
   const { events: badgeEvents } = useAddresses(badgeAdresses, {
     disable: addresses.length === 0,
-    cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+    cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
   });
-  const { events: awardEvents } = useEvents(
-    { ids: awards },
+  const { events: awards } = useEvents(
+    { kinds: [NDKKind.BadgeAward], "#p": [pubkey] },
     {
-      disable: awards.length === 0,
-      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+      cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
     },
   );
   const badges = useMemo(() => {
     const evs = [...badgeEvents];
     return evs.sort((a, b) => nip13.getPow(b.id) - nip13.getPow(a.id));
   }, [badgeEvents]);
-  return { badges, awards: awardEvents };
+  return { badges, awards };
 }

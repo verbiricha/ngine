@@ -18,21 +18,22 @@ function shortenPubkey(pk: string) {
   return `${pk.slice(0, 8)}`;
 }
 
-// todo: tags on profile for custom emoji
-export default function User({
+interface NpubProps extends UserProps {
+  npub: string;
+}
+
+function Npub({
   pubkey,
+  npub,
   color = "chakra-body-text",
   fontSize,
   fontWeight,
   size = "sm",
   ...rest
-}: UserProps) {
+}: NpubProps) {
   const Link = useLinkComponent();
-  const npub = useMemo(() => {
-    return nip19.npubEncode(pubkey);
-  }, [pubkey]);
-  const url = useLink("npub", npub);
   const profile = useProfile(pubkey);
+  const url = useLink("npub", npub);
   const component = (
     <HStack>
       <Avatar pubkey={pubkey} size={size} />
@@ -42,4 +43,23 @@ export default function User({
     </HStack>
   );
   return url ? <Link href={url}>{component}</Link> : component;
+}
+
+// todo: tags on profile for custom emoji
+export default function User({
+  pubkey,
+  color = "chakra-body-text",
+  size = "sm",
+  ...rest
+}: UserProps) {
+  const npub = useMemo(() => {
+    try {
+      return nip19.npubEncode(pubkey);
+    } catch (error) {
+      console.error("Bad pubkey", pubkey);
+    }
+  }, [pubkey]);
+  return npub ? (
+    <Npub pubkey={pubkey} npub={npub} color={color} size={size} {...rest} />
+  ) : null;
 }

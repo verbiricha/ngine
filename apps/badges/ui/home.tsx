@@ -120,7 +120,7 @@ export default function Home() {
         w="100%"
         gap={6}
       >
-        <Stack maxW="md">
+        <Stack maxW="md" gap={8}>
           <Heading
             textAlign={{
               base: "center",
@@ -138,7 +138,7 @@ export default function Home() {
                 paddingLeft: 12,
                 paddingRight: 12,
                 borderRight: "8px solid",
-                borderBottom: "1px solid",
+                borderBottom: "0.1px solid",
                 borderRightColor: "#F6F6FA",
                 borderBottomColor: "#F6F6FA",
                 "border-top-left-radius": "32px",
@@ -166,7 +166,7 @@ export default function Home() {
       </Flex>
       <BadgeStats badges={badges} awards={awards} />
       <Grid py={10}>
-        {byRarity.slice(1, 7).map((ev) => (
+        {byRarity.slice(1, 4).map((ev) => (
           <Badge key={ev.id} event={ev} />
         ))}
       </Grid>

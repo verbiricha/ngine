@@ -12,8 +12,9 @@ import {
   Text,
   Icon,
 } from "@chakra-ui/react";
-import { NDKKind } from "@nostr-dev-kit/ndk";
 import {
+  useSession,
+  useSigner,
   useAddress,
   useEvents,
   tagValues,
@@ -21,13 +22,14 @@ import {
   User,
   Markdown,
 } from "@ngine/core";
-
 import { nip13 } from "nostr-tools";
 
+import AwardBadge from "./award-badge";
+import { Rarities, getRarity } from "@core/rarity";
+import useAwards from "@hooks/useAwards";
 import BadgeIcon from "./badge-icon";
 import ZapCircle from "./zap-circle";
 import Surface from "./surface";
-import { Rarities, getRarity } from "@core/rarity";
 
 const rarityColor = {
   [Rarities.Normal]: "chakra-fg-text",
@@ -68,6 +70,56 @@ function Rarity({ rarity }: { rarity: Rarities }) {
   );
 }
 
+function BadgeDetails({
+  event,
+  rarity,
+}: {
+  event: NDKEvent;
+  rarity: Rarities | null;
+}) {
+  const session = useSession();
+  const canSign = useSigner();
+  const { awards, awardees } = useAwards(event);
+  const isOwner = event.pubkey === session?.pubkey;
+  return (
+    <Stack mt={4} w="100%" fontSize="sm">
+      <HStack justify="space-between">
+        <Text color="chakra-subtle-text">Creator</Text>
+        <User color="#B084FF" pubkey={event.pubkey} />
+      </HStack>
+      {rarity && (
+        <HStack justify="space-between">
+          <Text color="chakra-subtle-text">PoW Rarity</Text>
+          <Text fontWeight={600} color={rarityColor[rarity]} fontSize="sm">
+            {rarityName[rarity]}
+          </Text>
+        </HStack>
+      )}
+      <HStack justify="space-between">
+        <Text color="chakra-subtle-text">Times Awarded</Text>
+        <Text fontWeight={600} fontSize="sm">
+          {awards.length}
+        </Text>
+      </HStack>
+      {isOwner && canSign && <AwardBadge event={event} />}
+    </Stack>
+  );
+}
+
+function Awardees({ event }: { event: NDKEvent }) {
+  const { awardees } = useAwards(event);
+  return awardees.length > 0 ? (
+    <Surface w="100%">
+      <Heading fontSize="3xl">Awardees</Heading>
+      <Stack align="left" gap={3} w="100%">
+        {awardees.map((pk) => (
+          <User size="md" fontSize="lg" key={pk} pubkey={pk} />
+        ))}
+      </Stack>
+    </Surface>
+  ) : null;
+}
+
 interface BadgeProps extends EventProps, StackProps {
   showDetails?: boolean;
   linkToBadge?: boolean;
@@ -86,20 +138,6 @@ export default function Badge({
   const description = event.tagValue("description");
   const rarity = event.id ? getRarity(event.id) : null;
   const router = useRouter();
-  const { events: awards } = useEvents(
-    {
-      kinds: [NDKKind.BadgeAward],
-      authors: [event.pubkey],
-      ...event.filter(),
-    },
-    {
-      disable: !showDetails,
-    },
-  );
-
-  const awardees = useMemo(() => {
-    return [...new Set(awards.map((aw) => tagValues(aw, "p")).flat())];
-  }, [awards]);
 
   function goToBadge() {
     if (event.id && linkToBadge) {
@@ -138,43 +176,9 @@ export default function Badge({
             tags={event.tags}
           />
         </Text>
-        {showDetails && (
-          <Stack mt={4} w="100%" fontSize="sm">
-            <HStack justify="space-between">
-              <Text color="chakra-subtle-text">Creator</Text>
-              <User color="#B084FF" pubkey={event.pubkey} />
-            </HStack>
-            {rarity && (
-              <HStack justify="space-between">
-                <Text color="chakra-subtle-text">PoW Rarity</Text>
-                <Text
-                  fontWeight={600}
-                  color={rarityColor[rarity]}
-                  fontSize="sm"
-                >
-                  {rarityName[rarity]}
-                </Text>
-              </HStack>
-            )}
-            <HStack justify="space-between">
-              <Text color="chakra-subtle-text">Times Awarded</Text>
-              <Text fontWeight={600} fontSize="sm">
-                {awards.length}
-              </Text>
-            </HStack>
-          </Stack>
-        )}
+        {showDetails && <BadgeDetails event={event} rarity={rarity} />}
       </Surface>
-      {showDetails && awardees.length && (
-        <Surface w="100%">
-          <Heading fontSize="3xl">Awardees</Heading>
-          <Stack align="left" gap={3} w="100%">
-            {awardees.map((pk) => (
-              <User size="md" fontSize="lg" key={pk} pubkey={pk} />
-            ))}
-          </Stack>
-        </Surface>
-      )}
+      {showDetails && <Awardees event={event} />}
     </Stack>
   );
 }
