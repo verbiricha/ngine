@@ -147,7 +147,8 @@ export default function NewBadge() {
           <ImagePicker
             isDisabled={isMining}
             showPreview={false}
-            buttonProps={{ variant: "outline" }}
+            buttonProps={{ variant: "outline", isDisabled: isMining }}
+            inputProps={{ isDisabled: isMining }}
             onImageUpload={setImage}
           />
           <FormHelperText>
@@ -159,7 +160,8 @@ export default function NewBadge() {
           <ImagePicker
             isDisabled={isMining}
             showPreview={false}
-            buttonProps={{ variant: "outline" }}
+            buttonProps={{ variant: "outline", isDisabled: isMining }}
+            inputProps={{ isDisabled: isMining }}
             onImageUpload={setThumbnail}
           />
         </FormControl>

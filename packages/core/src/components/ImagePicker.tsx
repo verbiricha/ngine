@@ -8,6 +8,7 @@ import {
   Button,
   ButtonProps,
   Input,
+  InputProps,
   Avatar,
 } from "@chakra-ui/react";
 import { useIntl, FormattedMessage } from "react-intl";
@@ -30,12 +31,14 @@ interface ImagePickerProps {
   onImageUpload: (img: string) => void;
   defaultImage?: string;
   buttonProps?: ButtonProps;
+  inputProps?: InputProps;
 }
 
 export default function ImagePicker({
   showPreview = true,
   onImageUpload,
   defaultImage,
+  inputProps,
   buttonProps,
 }: ImagePickerProps) {
   const { formatMessage } = useIntl();
@@ -140,6 +143,7 @@ export default function ImagePicker({
             defaultMessage: "Image URL",
           })}
           onChange={(ev) => updateImage(ev.target.value)}
+          {...inputProps}
         />
         <Button
           colorScheme="brand"
