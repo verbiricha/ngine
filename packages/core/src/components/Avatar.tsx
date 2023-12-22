@@ -9,11 +9,12 @@ interface NostrAvatarProps extends AvatarProps {
   pubkey: string;
 }
 
-export default function NostrAvatar({ pubkey, ...rest }: NostrAvatarProps) {
+interface NpubNostrAvatarProps extends NostrAvatarProps {
+  npub: string;
+}
+
+function NpubNostrAvatar({ pubkey, npub, ...rest }: NpubNostrAvatarProps) {
   const Link = useLinkComponent();
-  const npub = useMemo(() => {
-    return nip19.npubEncode(pubkey);
-  }, [pubkey]);
   const url = useLink("npub", npub);
   const profile = useProfile(pubkey);
   const component = (
@@ -27,4 +28,17 @@ export default function NostrAvatar({ pubkey, ...rest }: NostrAvatarProps) {
     </Tooltip>
   );
   return url ? <Link href={url}>{component}</Link> : component;
+}
+
+export default function NostrAvatar({ pubkey, ...rest }: NostrAvatarProps) {
+  const npub = useMemo(() => {
+    try {
+      return nip19.npubEncode(pubkey);
+    } catch (error) {
+      console.error("Bad pubkey", pubkey);
+    }
+  }, [pubkey]);
+  return npub ? (
+    <NpubNostrAvatar pubkey={pubkey} npub={npub} {...rest} />
+  ) : null;
 }
