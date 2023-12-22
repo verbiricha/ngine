@@ -15,7 +15,12 @@ import { theme } from "@ui/theme";
 
 const cacheAdapter = new NDKCacheAdapterDexie({ dbName: "badges" });
 const ndk = new NDK({
-  explicitRelayUrls: ["wss://nos.lol", "wss://relay.snort.social", "wss://relay.damus.io", "wss://relay.nostr.band"],
+  explicitRelayUrls: [
+    "wss://nos.lol",
+    "wss://relay.snort.social",
+    "wss://relay.damus.io",
+    "wss://relay.nostr.band",
+  ],
   outboxRelayUrls: ["wss://purplepag.es"],
   enableOutboxModel: true,
   cacheAdapter,

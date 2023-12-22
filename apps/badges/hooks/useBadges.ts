@@ -1,20 +1,27 @@
 import { useMemo } from "react";
-import { NDKKind } from "@nostr-dev-kit/ndk";
+import { NDKKind, NDKSubscriptionCacheUsage } from "@nostr-dev-kit/ndk";
 import { tagValues, useEvent, useEvents, useAddresses } from "@ngine/core";
 import { nip13 } from "nostr-tools";
 
 export default function useBadges(pubkey: string) {
-  const event = useEvent({ kinds: [NDKKind.ProfileBadge], authors: [pubkey] });
+  const event = useEvent(
+    { kinds: [NDKKind.ProfileBadge], authors: [pubkey] },
+    {
+      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+    },
+  );
   const addresses = event ? tagValues(event, "a") : [];
   const awards = event ? tagValues(event, "e") : [];
   const badgeAdresses = [...new Set(addresses)];
   const { events: badgeEvents } = useAddresses(badgeAdresses, {
     disable: addresses.length === 0,
+    cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
   });
   const { events: awardEvents } = useEvents(
     { ids: awards },
     {
       disable: awards.length === 0,
+      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
     },
   );
   const badges = useMemo(() => {

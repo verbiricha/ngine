@@ -20,22 +20,43 @@ export function getPow(id: string) {
   return nip13.getPow(id);
 }
 
+const LEGENDARY = 128;
+const EPIC = 64;
+const SUPER_RARE = 32;
+const RARE = 21;
+
+export function getMinPow(r: Rarities): number {
+  if (r === Rarities.Legendary) {
+    return LEGENDARY;
+  }
+  if (r === Rarities.SuperRare) {
+    return SUPER_RARE;
+  }
+  if (r === Rarities.Epic) {
+    return EPIC;
+  }
+  if (r === Rarities.Rare) {
+    return RARE;
+  }
+  return 0;
+}
+
 export function getRarity(id: string) {
   const pow = nip13.getPow(id);
 
-  if (pow > 64) {
+  if (pow >= LEGENDARY) {
     return Rarities.Legendary;
   }
 
-  if (pow > 32) {
+  if (pow >= EPIC) {
     return Rarities.Epic;
   }
 
-  if (pow > 16) {
+  if (pow >= SUPER_RARE) {
     return Rarities.SuperRare;
   }
 
-  if (pow > 8) {
+  if (pow >= RARE) {
     return Rarities.Rare;
   }
 

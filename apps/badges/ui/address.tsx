@@ -9,7 +9,7 @@ import { nip19 } from "nostr-tools";
 import Badge from "./badge";
 
 function BadgeDefinition({ event }: EventProps) {
-  return <Badge event={event} showAwards={true} linkToBadge={false} />;
+  return <Badge event={event} showDetails={true} linkToBadge={false} />;
 }
 
 interface AddressProps {

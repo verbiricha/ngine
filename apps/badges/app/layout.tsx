@@ -1,5 +1,6 @@
 export const metadata = {
   title: "Badges",
+  description: "Create, collect and award badges",
 };
 
 export default function RootLayout({

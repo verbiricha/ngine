@@ -4,6 +4,7 @@ import {
   useColorModeValue,
   Flex,
   Stack,
+  StackProps,
   HStack,
   HStackProps,
   Image,
@@ -18,6 +19,7 @@ import {
   tagValues,
   EventProps,
   User,
+  Markdown,
 } from "@ngine/core";
 
 import { nip13 } from "nostr-tools";
@@ -66,15 +68,16 @@ function Rarity({ rarity }: { rarity: Rarities }) {
   );
 }
 
-interface BadgeProps extends EventProps {
-  showAwards?: boolean;
+interface BadgeProps extends EventProps, StackProps {
+  showDetails?: boolean;
   linkToBadge?: boolean;
 }
 
 export default function Badge({
   event,
-  showAwards,
+  showDetails,
   linkToBadge = true,
+  ...props
 }: BadgeProps) {
   const size = "248.871px";
   const name = event.tagValue("name");
@@ -90,7 +93,7 @@ export default function Badge({
       ...event.filter(),
     },
     {
-      disable: !showAwards,
+      disable: !showDetails,
     },
   );
 
@@ -105,11 +108,14 @@ export default function Badge({
   }
 
   return (
-    <Stack gap={5}>
+    <Stack align="center" w="100%" maxW="sm" gap={5} {...props}>
       <Surface
+        w="100%"
         position="relative"
         cursor={event.id && linkToBadge ? "pointer" : "auto"}
         onClick={goToBadge}
+        minH="sm"
+        h="100%"
       >
         {rarity && <Rarity rarity={rarity} />}
         <Image
@@ -127,9 +133,12 @@ export default function Badge({
           {name}
         </Heading>
         <Text color="chakra-subtle-text" fontSize="sm" textAlign="center">
-          {description}
+          <Markdown
+            content={showDetails ? description : description?.split("\n")[0]}
+            tags={event.tags}
+          />
         </Text>
-        {showAwards && (
+        {showDetails && (
           <Stack mt={4} w="100%" fontSize="sm">
             <HStack justify="space-between">
               <Text color="chakra-subtle-text">Creator</Text>
@@ -156,8 +165,8 @@ export default function Badge({
           </Stack>
         )}
       </Surface>
-      {showAwards && awardees.length && (
-        <Surface>
+      {showDetails && awardees.length && (
+        <Surface w="100%">
           <Heading fontSize="3xl">Awardees</Heading>
           <Stack align="left" gap={3} w="100%">
             {awardees.map((pk) => (

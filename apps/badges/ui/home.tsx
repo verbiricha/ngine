@@ -135,10 +135,12 @@ export default function Home() {
               style={{
                 background: gradient,
                 padding: 3,
-                paddingLeft: 6,
+                paddingLeft: 12,
                 paddingRight: 12,
                 borderRight: "8px solid",
+                borderBottom: "1px solid",
                 borderRightColor: "#F6F6FA",
+                borderBottomColor: "#F6F6FA",
                 "border-top-left-radius": "32px",
                 "border-bottom-right-radius": "32px",
               }}

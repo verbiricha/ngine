@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useRef, useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Flex,
@@ -9,6 +9,7 @@ import {
   FormLabel,
   FormErrorMessage,
   FormHelperText,
+  Button,
   Input,
   Textarea,
   RadioGroup,
@@ -26,7 +27,7 @@ import {
 } from "@ngine/core";
 import slugify from "slugify";
 
-import { rarityName, Rarities } from "@core/rarity";
+import { rarityName, getMinPow, Rarities } from "@core/rarity";
 import Badge from "./badge";
 
 export default function NewBadge() {
@@ -35,36 +36,71 @@ export default function NewBadge() {
   const canSign = useSigner();
   const sign = useSign();
   const session = useSession();
+  const workerRef = useRef<Worker>();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState();
   const [thumbnail, setThumbnail] = useState();
+  const [minPow, setMinPow] = useState(0);
+  const [isMining, setIsMining] = useState(false);
+  const [badge, setBadge] = useState();
 
   const isValidBadge = name.trim().length > 0 && image;
 
-  const badge = useMemo(() => {
+  // PoW miner
+  useEffect(() => {
+    workerRef.current = new Worker(
+      new URL("../core/worker.ts", import.meta.url),
+    );
+    workerRef.current.onmessage = (event: MessageEvent<number>) => {
+      setBadge(event.data);
+      setIsMining(false);
+    };
+
+    return () => {
+      workerRef.current?.terminate();
+    };
+  }, []);
+
+  useEffect(() => {
     const d = slugify(name);
-    // todo: rarity, id
     const ev = {
       pubkey: session?.pubkey || "",
       kind: NDKKind.BadgeDefinition,
       tags: [
         ["d", d],
         ["name", name],
-        ...[description.trim().length > 0 ? ["description", description] : []],
-        ...[image ? ["image", image] : []],
         ["alt", `Badge: ${name}`],
       ],
       content: "",
       created_at: unixNow(),
     };
-    return ev;
+    if (description.trim().length > 0) {
+      ev.tags.push(["description", description]);
+    }
+    if (image) {
+      ev.tags.push(["image", image]);
+    }
+    if (thumbnail) {
+      ev.tags.push(["thumb", thumbnail]);
+    }
+    setBadge(ev);
   }, [session, name, description, image, thumbnail]);
+
   const preview = useMemo(() => {
     return new NDKEvent(ndk, badge);
   }, [badge]);
 
+  function mine() {
+    if (minPow > 0) {
+      setIsMining(true);
+      workerRef.current?.postMessage({
+        event: badge,
+        difficulty: minPow,
+      });
+    }
+  }
   async function createBadge() {
     try {
       const event = await sign(preview);
@@ -89,6 +125,7 @@ export default function NewBadge() {
         <FormControl>
           <FormLabel>Name</FormLabel>
           <Input
+            isDisabled={isMining}
             placeholder="e.g. Nostr Early Adopter"
             value={name}
             onChange={(ev) => setName(ev.target.value)}
@@ -98,6 +135,7 @@ export default function NewBadge() {
         <FormControl>
           <FormLabel>Description</FormLabel>
           <Textarea
+            isDisabled={isMining}
             placeholder="Your text..."
             value={description}
             onChange={(ev) => setDescription(ev.target.value)}
@@ -107,8 +145,9 @@ export default function NewBadge() {
         <FormControl>
           <FormLabel>Image</FormLabel>
           <ImagePicker
+            isDisabled={isMining}
             showPreview={false}
-            buttonProps={{ variant: "gradient" }}
+            buttonProps={{ variant: "outline" }}
             onImageUpload={setImage}
           />
           <FormHelperText>
@@ -118,45 +157,61 @@ export default function NewBadge() {
         <FormControl>
           <FormLabel>Thumbnail</FormLabel>
           <ImagePicker
+            isDisabled={isMining}
             showPreview={false}
-            buttonProps={{ variant: "gradient" }}
+            buttonProps={{ variant: "outline" }}
             onImageUpload={setThumbnail}
           />
         </FormControl>
-        {/*
         <FormControl>
           <FormLabel>Rarity</FormLabel>
-          <RadioGroup colorScheme="gray" defaultValue={Rarities.Normal}>
-            <HStack wrap="wrap">
-              <Radio value={Rarities.Normal}>
-                {rarityName(Rarities.Normal)}
-              </Radio>
-              <Radio isDisabled value={Rarities.Rare}>
-                {rarityName(Rarities.Rare)}
-              </Radio>
-              <Radio isDisabled value={Rarities.SuperRare}>
-                {rarityName(Rarities.SuperRare)}
-              </Radio>
-              <Radio isDisabled value={Rarities.Epic}>
-                {rarityName(Rarities.Epic)}
-              </Radio>
-              <Radio isDisabled value={Rarities.Legendary}>
-                {rarityName(Rarities.Legendary)}
-              </Radio>
-            </HStack>
-          </RadioGroup>
+          <HStack justify="space-between">
+            <RadioGroup
+              isDisabled={isMining}
+              colorScheme="gray"
+              value={minPow}
+              onChange={(value) => setMinPow(Number(value))}
+            >
+              <HStack gap={4} wrap="wrap">
+                <Radio value={getMinPow(Rarities.Rare)}>
+                  {rarityName(Rarities.Rare)}
+                </Radio>
+                <Radio value={getMinPow(Rarities.SuperRare)}>
+                  {rarityName(Rarities.SuperRare)}
+                </Radio>
+                <Radio value={getMinPow(Rarities.Epic)}>
+                  {rarityName(Rarities.Epic)}
+                </Radio>
+                <Radio value={getMinPow(Rarities.Legendary)}>
+                  {rarityName(Rarities.Legendary)}
+                </Radio>
+              </HStack>
+            </RadioGroup>
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              isDisabled={!isValidBadge}
+              isLoading={isMining}
+              onClick={mine}
+            >
+              Mine
+            </Button>
+          </HStack>
+          <FormHelperText>
+            Badge creation takes more time the more rare it is. Make sure you
+            don't change badge details after mining a rare badge.
+          </FormHelperText>
         </FormControl>
-	*/}
         <AsyncButton
           mt={4}
           onClick={createBadge}
-          isDisabled={!isValidBadge || !canSign}
-          variant="gradient"
+          isDisabled={!isValidBadge || !canSign || isMining}
+          variant="outline"
         >
           Create
         </AsyncButton>
       </Stack>
-      {session?.pubkey && (
+      {session?.pubkey && badge && (
         <Stack>
           <Heading>Preview</Heading>
           <Badge event={preview} />

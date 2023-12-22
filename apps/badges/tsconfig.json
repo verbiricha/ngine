@@ -6,7 +6,7 @@
         "name": "next"
       }
     ],
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "incremental": true,
     "resolveJsonModule": true,
     "baseUrl": "./",

@@ -90,6 +90,7 @@ export default function ImagePicker({
         if (upload.error) {
           toast.error(upload.error);
         }
+        setIsUploading(false);
       } catch (error) {
         console.error(error);
         toast.error("Couldn't upload file");
