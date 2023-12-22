@@ -123,6 +123,7 @@ export default function NewBadge() {
             onImageUpload={setThumbnail}
           />
         </FormControl>
+        {/*
         <FormControl>
           <FormLabel>Rarity</FormLabel>
           <RadioGroup colorScheme="gray" defaultValue={Rarities.Normal}>
@@ -145,6 +146,7 @@ export default function NewBadge() {
             </HStack>
           </RadioGroup>
         </FormControl>
+	*/}
         <AsyncButton
           mt={4}
           onClick={createBadge}

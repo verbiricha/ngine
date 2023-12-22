@@ -70,20 +70,20 @@ export default function Header() {
         )}
         <LoginButton
           methods={["nip07", "npub"]}
-          button={
-            session?.pubkey ? (
+          buttonProps={{ variant: "gradient", size: "sm" }}
+          menuProps={{
+            button: session?.pubkey ? (
               <MenuButton
-                variant="link"
                 bg="transparent"
+                variant="link"
                 size="md"
                 as={Button}
                 rightIcon={null}
               >
                 <Avatar p={0.5} pubkey={session.pubkey} size="md" />
               </MenuButton>
-            ) : null
-          }
-          buttonProps={{ variant: "gradient", size: "sm" }}
+            ) : null,
+          }}
         >
           {session?.pubkey && (
             <MenuItem

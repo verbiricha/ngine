@@ -10,7 +10,11 @@ import {
   Tab,
   TabPanel,
 } from "@chakra-ui/react";
-import { NDKKind, NDKEvent } from "@nostr-dev-kit/ndk";
+import {
+  NDKKind,
+  NDKEvent,
+  NDKSubscriptionCacheUsage,
+} from "@nostr-dev-kit/ndk";
 import { useEvents, useProfile, Username, Markdown } from "@ngine/core";
 
 import Avatar from "./avatar";
@@ -37,21 +41,21 @@ function ProfileTabs({
       </TabList>
 
       <TabPanels>
-        <TabPanel>
+        <TabPanel px={0}>
           <Grid>
             {badges.slice(1, badges.length).map((e) => (
               <Badge key={e.id} event={e} />
             ))}
           </Grid>
         </TabPanel>
-        <TabPanel>
+        <TabPanel px={0}>
           <Grid>
             {awards.map((e) => (
               <BadgeAward key={e.id} event={e} />
             ))}
           </Grid>
         </TabPanel>
-        <TabPanel>
+        <TabPanel px={0}>
           <Grid>
             {created.map((e) => (
               <Badge key={e.id} event={e} />
@@ -65,10 +69,15 @@ function ProfileTabs({
 
 export default function Profile({ pubkey }: { pubkey: string }) {
   const profile = useProfile(pubkey);
-  const { events: created } = useEvents({
-    kinds: [NDKKind.BadgeDefinition],
-    authors: [pubkey],
-  });
+  const { events: created } = useEvents(
+    {
+      kinds: [NDKKind.BadgeDefinition],
+      authors: [pubkey],
+    },
+    {
+      cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
+    },
+  );
   const { badges, awards } = useBadges(pubkey);
   const highlighted = badges[0];
   return (

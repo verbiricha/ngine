@@ -18,6 +18,7 @@ export default function Grid({
         sm: 2,
         md: maxCol,
       }}
+      px={{ base: 4, sm: 0 }}
       spacing={spacing}
       {...props}
     >

@@ -68,9 +68,14 @@ function Rarity({ rarity }: { rarity: Rarities }) {
 
 interface BadgeProps extends EventProps {
   showAwards?: boolean;
+  linkToBadge?: boolean;
 }
 
-export default function Badge({ event, showAwards }: BadgeProps) {
+export default function Badge({
+  event,
+  showAwards,
+  linkToBadge = true,
+}: BadgeProps) {
   const size = "248.871px";
   const name = event.tagValue("name");
   const image = event.tagValue("image");
@@ -94,7 +99,7 @@ export default function Badge({ event, showAwards }: BadgeProps) {
   }, [awards]);
 
   function goToBadge() {
-    if (event.id) {
+    if (event.id && linkToBadge) {
       router.push(`/a/${event.encode()}`);
     }
   }
@@ -103,7 +108,7 @@ export default function Badge({ event, showAwards }: BadgeProps) {
     <Stack gap={5}>
       <Surface
         position="relative"
-        cursor={event.id ? "pointer" : "auto"}
+        cursor={event.id && linkToBadge ? "pointer" : "auto"}
         onClick={goToBadge}
       >
         {rarity && <Rarity rarity={rarity} />}
@@ -128,7 +133,7 @@ export default function Badge({ event, showAwards }: BadgeProps) {
           <Stack mt={4} w="100%" fontSize="sm">
             <HStack justify="space-between">
               <Text color="chakra-subtle-text">Creator</Text>
-              <User color="#B084FF" pubkey={event.pubkey} hideAvatar />
+              <User color="#B084FF" pubkey={event.pubkey} />
             </HStack>
             {rarity && (
               <HStack justify="space-between">

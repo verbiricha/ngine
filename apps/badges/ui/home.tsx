@@ -111,14 +111,16 @@ export default function Home() {
       <Flex
         align="center"
         direction={{ base: "column", md: "row" }}
-        gap={20}
+        justify="space-between"
         py={{
           base: 6,
           sm: 8,
           md: 12,
         }}
+        w="100%"
+        gap={6}
       >
-        <Stack>
+        <Stack maxW="md">
           <Heading
             textAlign={{
               base: "center",
@@ -133,6 +135,7 @@ export default function Home() {
               style={{
                 background: gradient,
                 padding: 3,
+                paddingLeft: 6,
                 paddingRight: 12,
                 borderRight: "8px solid",
                 borderRightColor: "#F6F6FA",
