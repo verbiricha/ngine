@@ -6,7 +6,8 @@ import {
   useEvents,
   useAddresses,
 } from "@ngine/core";
-import { nip13 } from "nostr-tools";
+
+import { getPow } from "@core/rarity"
 
 export default function useBadges(pubkey: string) {
   const profile = useLatestEvent({
@@ -27,7 +28,7 @@ export default function useBadges(pubkey: string) {
   );
   const badges = useMemo(() => {
     const evs = [...badgeEvents];
-    return evs.sort((a, b) => nip13.getPow(b.id) - nip13.getPow(a.id));
+    return evs.sort((a, b) => getPow(b.id) - getPow(a.id));
   }, [badgeEvents]);
   return { profile, badges, awards };
 }
