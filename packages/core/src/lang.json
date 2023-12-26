@@ -1,4 +1,8 @@
 {
+  "ngine.bookmarks-count": {
+    "defaultMessage": "Bookmarks ({count})",
+    "description": "Bookmarks count"
+  },
   "ngine.comment-label": {
     "defaultMessage": "Comment",
     "description": "Comment field label"
@@ -166,6 +170,14 @@
   "ngine.open-in-wallet": {
     "defaultMessage": "Open in wallet",
     "description": "Open invoice in wallet"
+  },
+  "ngine.open-nostr-app-title": {
+    "defaultMessage": "Apps",
+    "description": "Title of nostr app menu"
+  },
+  "ngine.open-nostr-link": {
+    "defaultMessage": "Nostr link",
+    "description": "Open nostr link"
   },
   "ngine.preview": {
     "defaultMessage": "Preview",

@@ -20,6 +20,7 @@ import User from "./User";
 import Markdown from "./Markdown";
 import Reactions from "./Reactions";
 import FormattedRelativeTime from "./FormattedRelativeTime";
+import RecommendedAppMenu from "./RecommendedAppMenu";
 import { EventProps, ReactionKind } from "../types";
 
 interface LongFormProps extends EventProps, CardProps {}
@@ -47,11 +48,14 @@ export default function LongForm({
       <CardHeader>
         <HStack align="center" justify="space-between">
           <User pubkey={event.pubkey} />
-          {event.sig && publishedAt && (
-            <Text color="gray.400" fontSize="sm">
-              <FormattedRelativeTime timestamp={Number(publishedAt)} />
-            </Text>
-          )}
+          <HStack>
+            {event.sig && publishedAt && (
+              <Text color="gray.400" fontSize="sm">
+                <FormattedRelativeTime timestamp={Number(publishedAt)} />
+              </Text>
+            )}
+            <RecommendedAppMenu event={event} size="xs" />
+          </HStack>
         </HStack>
       </CardHeader>
       <CardBody>

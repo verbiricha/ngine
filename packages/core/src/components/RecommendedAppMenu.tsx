@@ -3,10 +3,11 @@ import {
   HStack,
   Menu,
   MenuButton,
-  MenuButtonProps,
   MenuList,
+  MenuGroup,
   MenuItem,
   Button,
+  ButtonProps,
   Text,
   Image,
   Icon,
@@ -18,7 +19,7 @@ import NDK, {
   NDKSubscriptionCacheUsage,
 } from "@nostr-dev-kit/ndk";
 import { useQuery } from "@tanstack/react-query";
-import { FormattedMessage } from "react-intl";
+import { useIntl, FormattedMessage } from "react-intl";
 
 import AvatarGroup from "./AvatarGroup";
 import { useNDK } from "../context";
@@ -26,7 +27,7 @@ import { useSession, useContacts } from "../state";
 import { tagValues } from "../tags";
 import { dedupe, parseJSON } from "../utils";
 import { EventProps } from "../types";
-import { Star, ChevronDown } from "../icons";
+import { Star, Link, ChevronDown } from "../icons";
 import { addressesToFilter } from "../filter";
 
 async function queryReccommendedApps(
@@ -180,13 +181,19 @@ function AppMenuItem({
   ) : null;
 }
 
-interface RecommendedAppMenuProps extends EventProps, MenuButtonProps {}
+interface RecommendedAppMenuProps extends EventProps, ButtonProps {}
 
 export default function RecommendedAppMenu({
   event,
   ...props
 }: RecommendedAppMenuProps) {
   const { data: recommended, isLoading } = useRecommendedApps(event);
+  const { formatMessage } = useIntl();
+
+  function openLink() {
+    window.open(`nostr:${event.encode()}`);
+  }
+
   return (
     <Menu isLazy>
       <MenuButton
@@ -206,14 +213,29 @@ export default function RecommendedAppMenu({
         />
       </MenuButton>
       <MenuList>
-        {recommended?.map(({ ev, recommenders }) => (
-          <AppMenuItem
-            key={ev.tagId()}
-            unknownEvent={event}
-            event={ev}
-            recommenders={recommenders}
+        <MenuItem icon={<Icon as={Link} />} onClick={openLink}>
+          <FormattedMessage
+            id="ngine.open-nostr-link"
+            description="Open nostr link"
+            defaultMessage="Nostr link"
           />
-        ))}
+        </MenuItem>
+        <MenuGroup
+          title={formatMessage({
+            id: "ngine.open-nostr-app-title",
+            description: "Title of nostr app menu",
+            defaultMessage: "Apps",
+          })}
+        >
+          {recommended?.map(({ ev, recommenders }) => (
+            <AppMenuItem
+              key={ev.tagId()}
+              unknownEvent={event}
+              event={ev}
+              recommenders={recommenders}
+            />
+          ))}
+        </MenuGroup>
       </MenuList>
     </Menu>
   );

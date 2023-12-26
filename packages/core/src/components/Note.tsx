@@ -15,8 +15,8 @@ import User from "./User";
 import Markdown from "./Markdown";
 import Reactions from "./Reactions";
 import FormattedRelativeTime from "./FormattedRelativeTime";
+import RecommendedAppMenu from "./RecommendedAppMenu";
 import { EventProps, ReactionKind } from "../types";
-
 interface NoteProps extends EventProps, CardProps {}
 
 const defaultReactionKinds: ReactionKind[] = [
@@ -42,11 +42,14 @@ export default function Note({
       <CardHeader>
         <HStack align="center" justify="space-between">
           <User pubkey={event.pubkey} />
-          {event.sig && (
-            <Text color="gray.400" fontSize="sm">
-              <FormattedRelativeTime timestamp={event.created_at ?? 0} />
-            </Text>
-          )}
+          <HStack>
+            {event.sig && (
+              <Text color="gray.400" fontSize="sm">
+                <FormattedRelativeTime timestamp={event.created_at ?? 0} />
+              </Text>
+            )}
+            <RecommendedAppMenu event={event} size="xs" />
+          </HStack>
         </HStack>
       </CardHeader>
       <CardBody>

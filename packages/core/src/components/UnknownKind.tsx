@@ -16,7 +16,7 @@ export default function UnknownKind({ event }: EventProps) {
       <CardHeader>
         <HStack align="center" justify="space-between">
           <User pubkey={event.pubkey} />
-          <RecommendedAppMenu event={event} />
+          <RecommendedAppMenu event={event} size="xs" />
         </HStack>
       </CardHeader>
       <CardBody>

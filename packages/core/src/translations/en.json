@@ -1,4 +1,5 @@
 {
+  "ngine.bookmarks-count": "Bookmarks ({count})",
   "ngine.comment-label": "Comment",
   "ngine.comment-placeholder": "Type your reply here",
   "ngine.copy": "Copy",
@@ -41,6 +42,8 @@
   "ngine.onboarding.your-name-helper": "You can change it layer if you like.",
   "ngine.open-app": "Open",
   "ngine.open-in-wallet": "Open in wallet",
+  "ngine.open-nostr-app-title": "Apps",
+  "ngine.open-nostr-link": "Nostr link",
   "ngine.preview": "Preview",
   "ngine.pubkey-login": "Log in (read only)",
   "ngine.react-error": "Couldn't react",
