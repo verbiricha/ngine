@@ -6,7 +6,7 @@ import { NDKKind } from "@nostr-dev-kit/ndk";
 import RelayList from "./relay-list";
 import RelaySet from "./relay-set";
 
-export default function RelayFeed({ relays }: { relays: string[] }) {
+export default function RelaysFeed({ relays }: { relays: string[] }) {
   // todo: search if supported, choose kinds
   const kinds = [
     NDKKind.Text,

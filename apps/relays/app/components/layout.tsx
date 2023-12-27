@@ -2,7 +2,7 @@
 
 import { useEffect, ReactNode } from "react";
 
-import NDK from "@nostr-dev-kit/ndk";
+import NDK, { NDKRelayAuthPolicies } from "@nostr-dev-kit/ndk";
 import NDKCacheAdapterDexie from "@nostr-dev-kit/ndk-cache-dexie";
 import { NgineProvider } from "@ngine/core";
 
@@ -15,7 +15,7 @@ import { theme } from "../theme";
 
 const cacheAdapter = new NDKCacheAdapterDexie({ dbName: "relays" });
 const ndk = new NDK({
-  explicitRelayUrls: ["wss://nos.lol", "wss://frens.nostr1.com"],
+  explicitRelayUrls: [],
   outboxRelayUrls: ["wss://purplepag.es"],
   enableOutboxModel: true,
   cacheAdapter,
@@ -24,6 +24,7 @@ const ndk = new NDK({
 export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     ndk.connect();
+    ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk });
   }, []);
 
   return (

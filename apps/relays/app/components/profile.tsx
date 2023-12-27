@@ -5,7 +5,8 @@ import { NDKKind } from "@nostr-dev-kit/ndk";
 import { Stack, HStack } from "@chakra-ui/react";
 import {
   useProfile,
-  useEvent,
+  useEvents,
+  useLatestEvent,
   User,
   ZapButton,
   Feed,
@@ -20,13 +21,13 @@ import { tagToRelay } from "../utils";
 
 export default function Profile({ pubkey }: { pubkey: string }) {
   const profile = useProfile(pubkey);
-  const event = useEvent(
+  const event = useLatestEvent(
     {
       kinds: [NDKKind.RelayList],
       authors: [pubkey],
     },
     {
-      cacheUsage: NDKSubscriptionCacheUsage.ONLY_RELAY,
+      cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
     },
   );
   const relays = useMemo(() => {

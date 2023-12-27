@@ -24,6 +24,7 @@ import NDK, {
   NDKEvent,
   NDKSigner,
   NDKSubscriptionCacheUsage,
+  NDKRelayAuthPolicies,
 } from "@nostr-dev-kit/ndk";
 import { generatePrivateKey, getPublicKey } from "nostr-tools";
 
@@ -72,7 +73,7 @@ interface NgineProviderProps {
   theme?: Dict;
   links?: Links;
   children: ReactNode;
-  disableFiatRates?: boolean;
+  enableFiatRates?: boolean;
   locale?: string;
 }
 
@@ -94,7 +95,7 @@ function SessionProvider({
       authors: [pubkey],
     },
     {
-      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+      cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
       closeOnEose: false,
     },
   );
@@ -117,7 +118,7 @@ function SessionProvider({
       authors: [pubkey],
     },
     {
-      cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+      cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
       closeOnEose: false,
     },
   );
@@ -140,14 +141,14 @@ export const NgineProvider = ({
   theme = defaultTheme,
   links,
   children,
-  disableFiatRates = false,
+  enableFiatRates = false,
   locale,
 }: NgineProviderProps) => {
   const [session, setSession] = useAtom(sessionAtom);
   const [, setFollows] = useAtom(followsAtom);
   const [, setRelays] = useAtom(relayListAtom);
   const [, setRates] = useAtom(ratesAtom);
-  const rates = useRates(disableFiatRates);
+  const rates = useRates(!enableFiatRates);
 
   useEffect(() => {
     setRates(rates);
@@ -155,11 +156,13 @@ export const NgineProvider = ({
 
   useEffect(() => {
     if (session?.method === "nip07") {
-      const sig = new NDKNip07Signer();
-      ndk.signer = sig;
+      const signer = new NDKNip07Signer();
+      ndk.signer = signer;
+      ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk, signer });
     } else if (session?.method === "nsec") {
-      const sig = new NDKPrivateKeySigner(session.privkey);
-      ndk.signer = sig;
+      const signer = new NDKPrivateKeySigner(session.privkey);
+      ndk.signer = signer;
+      ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk, signer });
     }
   }, [session]);
 
@@ -168,6 +171,7 @@ export const NgineProvider = ({
     const user = await signer.blockUntilReady();
     if (user) {
       ndk.signer = signer;
+      ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk, signer });
       setSession({
         method: "nip07",
         pubkey: user.pubkey,
@@ -193,6 +197,7 @@ export const NgineProvider = ({
     const user = await signer.blockUntilReady();
     if (user) {
       ndk.signer = signer;
+      ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk, signer });
       setSession({
         method: "nsec",
         pubkey: user.pubkey,
@@ -219,6 +224,7 @@ export const NgineProvider = ({
 
   function logOut() {
     ndk.signer = undefined;
+    ndk.relayAuthDefaultPolicy = undefined;
     setSession(null);
     setFollows(null);
     setRelays(null);
