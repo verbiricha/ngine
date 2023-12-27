@@ -29,6 +29,8 @@ import { extractCustomEmoji } from "../nostr/emoji";
 const FileExtensionRegex = /\.([\w]+)$/i;
 const HashtagRegex = /(#[^\s!@#$%^&*()=+.\/,\[{\]};:'"?><]+)/g;
 
+// todo: nrelay
+
 interface HyperTextProps extends LinkProps {
   link: string;
   children: ReactNode;

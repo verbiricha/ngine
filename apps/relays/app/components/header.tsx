@@ -10,10 +10,12 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { useSession, User, LoginButton } from "@ngine/core";
+import { nip19 } from "nostr-tools";
 
 import Link from "./link";
 import RelayIcon from "./relay-icon";
 import ColorModeToggle from "./color-mode-toggle";
+import { maxWidth } from "@ui/const";
 
 export default function Header() {
   const router = useRouter();
@@ -24,7 +26,7 @@ export default function Header() {
       alignItems="center"
       justifyContent="space-between"
       width="100%"
-      maxWidth="48rem"
+      maxWidth={maxWidth}
       py={2}
       px={4}
     >
@@ -45,7 +47,11 @@ export default function Header() {
         <LoginButton size="sm" methods={["nip07", "npub"]}>
           {session?.pubkey && (
             <>
-              <MenuItem>
+              <MenuItem
+                onClick={() =>
+                  router.push(`/p/${nip19.npubEncode(session.pubkey)}`)
+                }
+              >
                 <User pubkey={session.pubkey} />
               </MenuItem>
               <MenuDivider />
