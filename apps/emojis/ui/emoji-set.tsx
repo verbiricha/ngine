@@ -101,10 +101,10 @@ export default function EmojiSet({ event }: EventProps) {
     <Card variant="event">
       <CardHeader>
         <HStack align="flex-start" justify="space-between">
-          <HStack justify="space-between">
+          <Stack>
             <Heading fontSize="2xl">{title}</Heading>
             <User size="xs" fontSize="sm" pubkey={event.pubkey} />
-          </HStack>
+          </Stack>
           <Menu isLazy>
             <MenuButton
               as={Button}
