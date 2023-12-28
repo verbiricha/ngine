@@ -1,7 +1,6 @@
 "use client";
 
 import { Feed } from "@ngine/core";
-import { NDKKind } from "@nostr-dev-kit/ndk";
 
 import { kinds, components } from "../kinds";
 

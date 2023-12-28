@@ -13,8 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
 import { Feed } from "@ngine/core";
-import { NDKKind } from "@nostr-dev-kit/ndk";
-import { useIntl, FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { kinds, components } from "../kinds";
 
@@ -44,6 +43,7 @@ export default function SearchFeed({ relays }: { relays: string[] }) {
             />
             <InputRightElement width="2.5rem">
               <IconButton
+                aria-label="Clear"
                 isDisabled={term.length === 0}
                 icon={<CloseIcon />}
                 variant="ghost"

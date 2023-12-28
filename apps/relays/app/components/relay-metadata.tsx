@@ -30,7 +30,7 @@ export default function Metadata({
         </HStack>
         <ToggleRelay url={url} />
       </HStack>
-      <RelaySummary url={url} metadata={metadata} />
+      <RelaySummary metadata={metadata} />
     </Stack>
   );
 }

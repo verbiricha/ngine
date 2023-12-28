@@ -1,7 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
 import {
   Stack,
   HStack,
@@ -11,15 +9,12 @@ import {
   Text,
   List,
   ListItem,
-  Alert,
-  AlertIcon,
 } from "@chakra-ui/react";
-import { useInView } from "react-intersection-observer";
 import { FormattedMessage } from "react-intl";
 import { Amount, User } from "@ngine/core";
 
 import Link from "./link";
-import { useRelayMetadata, RelayMetadata } from "../hooks/useRelayMetadata";
+import { RelayMetadata } from "../hooks/useRelayMetadata";
 
 interface RelaySummaryProps {
   metadata: RelayMetadata;
@@ -253,7 +248,7 @@ function CommunityPreferences({ metadata }: RelaySummaryProps) {
   );
 }
 
-export default function RelaySummary({ url, metadata }: RelaySummaryProps) {
+export default function RelaySummary({ metadata }: RelaySummaryProps) {
   return (
     <Stack>
       <Description metadata={metadata} />

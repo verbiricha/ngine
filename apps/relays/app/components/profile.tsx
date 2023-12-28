@@ -5,7 +5,6 @@ import { NDKKind } from "@nostr-dev-kit/ndk";
 import { Stack, HStack } from "@chakra-ui/react";
 import {
   useProfile,
-  useEvents,
   useLatestEvent,
   User,
   ZapButton,
@@ -15,7 +14,6 @@ import {
 import { NDKSubscriptionCacheUsage } from "@nostr-dev-kit/ndk";
 
 import RelaySettings from "./relay-settings";
-import RelayList from "./relay-list";
 import { tagToRelay } from "../utils";
 import { kinds, components } from "../kinds";
 

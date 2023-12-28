@@ -23,10 +23,19 @@ export default function Relay({ url }: { url: string }) {
             defaultMessage="Could not fetch relay metadata"
           />
         </Alert>
-      ) : isFetched ? (
+      ) : isFetched && data ? (
         <RelayMetadata url={url} metadata={data} />
-      ) : (
+      ) : !isFetched ? (
         <Skeleton height="42px" />
+      ) : (
+        <Alert status="error">
+          <AlertIcon />
+          <FormattedMessage
+            id="relay-info-fetch-error"
+            description="Error message when trying to fetch relay metadata"
+            defaultMessage="Could not fetch relay metadata"
+          />
+        </Alert>
       )}
       {supportsSearch ? (
         <SearchFeed relays={[url]} />
