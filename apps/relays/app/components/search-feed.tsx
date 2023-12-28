@@ -16,22 +16,17 @@ import { Feed } from "@ngine/core";
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import { useIntl, FormattedMessage } from "react-intl";
 
-import RelayList from "./relay-list";
-import RelaySet from "./relay-set";
+import { kinds, components } from "../kinds";
 
 export default function SearchFeed({ relays }: { relays: string[] }) {
   // todo: store search params in URL
   const [query, setQuery] = useState("");
   const [term, setTerm] = useState("");
-  const kinds = [
-    NDKKind.Text,
-    NDKKind.Article,
-    NDKKind.RelayList,
-    NDKKind.RelaySet,
-  ];
+
   function search() {
     setQuery(term);
   }
+
   function clear() {
     setQuery("");
     setTerm("");
@@ -81,10 +76,7 @@ export default function SearchFeed({ relays }: { relays: string[] }) {
         }
         relays={relays}
         pageSize={10}
-        components={{
-          [NDKKind.RelayList]: RelayList,
-          [NDKKind.RelaySet]: RelaySet,
-        }}
+        components={components}
       />
     </Stack>
   );

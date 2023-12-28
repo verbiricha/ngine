@@ -16,8 +16,8 @@ import { NDKSubscriptionCacheUsage } from "@nostr-dev-kit/ndk";
 
 import RelaySettings from "./relay-settings";
 import RelayList from "./relay-list";
-import RelaySet from "./relay-set";
 import { tagToRelay } from "../utils";
+import { kinds, components } from "../kinds";
 
 export default function Profile({ pubkey }: { pubkey: string }) {
   const profile = useProfile(pubkey, NDKSubscriptionCacheUsage.PARALLEL);
@@ -52,18 +52,10 @@ export default function Profile({ pubkey }: { pubkey: string }) {
           </Stack>
           <Feed
             filter={{
-              kinds: [
-                NDKKind.Text,
-                NDKKind.Article,
-                NDKKind.RelayList,
-                NDKKind.RelaySet,
-              ],
+              kinds,
               authors: [pubkey],
             }}
-            components={{
-              [NDKKind.RelayList]: RelayList,
-              [NDKKind.RelaySet]: RelaySet,
-            }}
+            components={components}
             relays={relays.filter((r) => r.write).map((r) => r.url)}
           />
         </>
