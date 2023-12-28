@@ -52,7 +52,7 @@ function ReactionCount({ icon, count, reaction, ...rest }: ReactionCountProps) {
   return (
     <Flex align="center" gap={2} direction="row" {...rest} wrap="wrap">
       {customEmoji ? (
-        <Emoji alt={customEmoji[1]} src={customEmoji[2]} />
+        <Emoji alt={customEmoji[1]} src={customEmoji[2]} mb={0} />
       ) : emoji && !["+", "-"].includes(emoji) ? (
         <Text fontSize="xs">{emoji}</Text>
       ) : (
@@ -101,7 +101,6 @@ export function ReactionCounts({
           kinds: [bookmarkList],
           authors: [pubkey],
         });
-        // todo: toggle
         const newBookmarks = {
           kind: bookmarkList,
           tags: bookmarks

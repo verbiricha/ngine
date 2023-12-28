@@ -13,6 +13,7 @@
     ],
     "incremental": true,
     "resolveJsonModule": true,
+    "baseUrl": "./",
     "paths": {
       "@ui/*": ["ui/*"],
       "@hooks/*": ["hooks/*"]

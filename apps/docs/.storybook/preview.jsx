@@ -3,5 +3,5 @@ import { NgineProvider } from "@ngine/core";
 import ndk from "./ndk"
 
 export const decorators = [
-  (Story) => <NgineProvider ndk={ndk}><Story /></NgineProvider>
+  (Story) => <NgineProvider ndk={ndk} enableFiatRates={true}><Story /></NgineProvider>
 ]

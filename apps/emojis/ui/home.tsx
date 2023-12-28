@@ -53,7 +53,7 @@ function HighlightedNote() {
   }, []);
 
   return (
-    <Box minW="300px">
+    <Box minW="320px" maxW="420px" w="100%">
       <Event event={ev} />
     </Box>
   );
@@ -63,11 +63,7 @@ function SupportingApps() {
   const { events: apps } = useEvents(
     {
       kinds: [NDKKind.AppHandler],
-      "#k": [
-        String(NDKKind.EmojiSet),
-        String(NDKKind.EmojiList),
-        "30311", // live streams
-      ],
+      "#k": [String(NDKKind.EmojiSet), String(NDKKind.EmojiList)],
     },
     {
       closeOnEose: true,
@@ -127,11 +123,14 @@ function Hero() {
         base: "column",
         lg: "row",
       }}
-      py={4}
+      py={{
+        base: 0,
+        md: 4,
+      }}
       gap={6}
     >
-      <Heading fontSize="6xl">
-        Spice your reactions and notes with{" "}
+      <Heading fontSize={{ base: "5xl", sm: "6xl" }}>
+        Spice up your reactions with{" "}
         <Box as="mark" color="chakra-body-text" background={bg}>
           custom emotes
         </Box>
@@ -175,22 +174,36 @@ function EmojiPacks() {
   const { events: emojiPacks } = useAddresses(addresses, {
     disable: !eose,
   });
+  const emojis = emojiPacks
+    .map((e) => e.tags.filter((t) => t[0] === "emoji"))
+    .flat();
   return (
-    <Stack>
-      <Heading fontSize="5xl">Popular emoji sets</Heading>
-      <SimpleGrid
-        columns={{
-          base: 1,
-          md: 2,
-          xl: 3,
-        }}
-        spacing={6}
-      >
-        {emojiPacks.map((e) => (
-          <EmojiSet key={e.id} event={e} />
+    <>
+      {/* @ts-ignore */}
+      <marquee>
+        {emojis.map((t) => (
+          <Box key={t[1]} px={2} display="inline">
+            <Emoji alt={t[1]} src={t[2]} boxSize={8} />
+          </Box>
         ))}
-      </SimpleGrid>
-    </Stack>
+        {/* @ts-ignore */}
+      </marquee>
+      <Stack>
+        <Heading fontSize="5xl">Popular emoji sets</Heading>
+        <SimpleGrid
+          columns={{
+            base: 1,
+            md: 2,
+            xl: 3,
+          }}
+          spacing={6}
+        >
+          {emojiPacks.map((e) => (
+            <EmojiSet key={e.id} event={e} />
+          ))}
+        </SimpleGrid>
+      </Stack>
+    </>
   );
 }
 

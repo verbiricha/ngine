@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Flex,
+  Box,
   Stack,
   HStack,
   Heading,
@@ -14,8 +16,16 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
+import { NDKKind } from "@nostr-dev-kit/ndk";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { Emoji, ImagePicker, AsyncButton } from "@ngine/core";
+import {
+  unixNow,
+  useSign,
+  useSigner,
+  Emoji,
+  ImagePicker,
+  AsyncButton,
+} from "@ngine/core";
 
 interface EmojiDefinition {
   shortcode: string;
@@ -45,29 +55,29 @@ function NewEmoji({ onNewEmoji }: NewEmojiProps) {
   return (
     <Stack gap={6}>
       <HStack align="center">
+        <Image
+          boxSize={6}
+          src={image}
+          fallback={
+            <Icon
+              color="chakra-subtle-text"
+              boxSize={6}
+              as={QuestionOutlineIcon}
+            />
+          }
+        />
         <Input
+          maxW="12em"
           value={shortcode}
           onChange={(ev) => setShortcode(ev.target.value)}
         />
-        <ImagePicker
-          key={imageKey}
-          showPreview={false}
-          onImagePick={setImage}
-        />
-
-        <Flex>
-          <Image
-            boxSize={6}
-            src={image}
-            fallback={
-              <Icon
-                color="chakra-subtle-text"
-                boxSize={6}
-                as={QuestionOutlineIcon}
-              />
-            }
+        <Box flex={1}>
+          <ImagePicker
+            key={imageKey}
+            showPreview={false}
+            onImagePick={setImage}
           />
-        </Flex>
+        </Box>
       </HStack>
       <Button isDisabled={!isValidEmoji} onClick={addEmoji}>
         Add
@@ -76,9 +86,22 @@ function NewEmoji({ onNewEmoji }: NewEmojiProps) {
   );
 }
 
-export default function NewEmojiSet() {
-  const [name, setName] = useState<string>("");
-  const [emojis, setEmojis] = useState<EmojiDefinition[]>([]);
+interface NewEmojiSetProps {
+  defaultIdentifier?: string;
+  defaultName?: string;
+  defaultEmojis?: EmojiDefinition[];
+}
+
+export default function NewEmojiSet({
+  defaultIdentifier,
+  defaultName = "",
+  defaultEmojis = [],
+}: NewEmojiSetProps) {
+  const router = useRouter();
+  const sign = useSign();
+  const canSign = useSigner();
+  const [name, setName] = useState<string>(defaultName);
+  const [emojis, setEmojis] = useState<EmojiDefinition[]>(defaultEmojis);
 
   function addEmoji(e: EmojiDefinition) {
     setEmojis(emojis.concat([e]));
@@ -88,13 +111,39 @@ export default function NewEmojiSet() {
     setEmojis(emojis.filter((emo) => emo.shortcode !== e.shortcode));
   }
 
-  async function saveEmojiSet() {}
+  async function saveEmojiSet() {
+    const newEmojiSet = {
+      kind: NDKKind.EmojiSet,
+      content: "",
+      created_at: unixNow(),
+      tags: [
+        ["d", defaultIdentifier ? defaultIdentifier : name],
+        ["title", name],
+        ...emojis.map((e) => ["emoji", e.shortcode, e.image]),
+      ],
+    };
+    try {
+      const ev = await sign(newEmojiSet);
+      if (ev) {
+        await ev.publish();
+        await router.push(`/a/${ev.encode()}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <Stack>
       <HStack justify="space-between">
-        <Heading>New emoji set</Heading>
-        <AsyncButton onClick={saveEmojiSet}>Save</AsyncButton>
+        {defaultIdentifier ? (
+          <Heading>Edit emoji set</Heading>
+        ) : (
+          <Heading>New emoji set</Heading>
+        )}
+        <AsyncButton isDisabled={!canSign} onClick={saveEmojiSet}>
+          Save
+        </AsyncButton>
       </HStack>
       <FormControl>
         <FormLabel>Name</FormLabel>
