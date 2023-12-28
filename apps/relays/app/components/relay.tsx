@@ -38,7 +38,7 @@ export default function Relay({ url }: { url: string }) {
         </Alert>
       )}
       {supportsSearch ? (
-        <SearchFeed relays={[url]} />
+        <SearchFeed searchRelays={[url]} relays={[url]} />
       ) : (
         <RelaysFeed relays={[url]} />
       )}

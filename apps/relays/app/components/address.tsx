@@ -14,14 +14,24 @@ import { NDKKind, NDKEvent } from "@nostr-dev-kit/ndk";
 import { useEvent, User, Event } from "@ngine/core";
 
 import RelaysFeed from "./relays-feed";
+import SearchFeed from "./search-feed";
 import RelayLink from "./relay-link";
 import { tagToRelay } from "../utils";
+import { useRelaysMetadata } from "../hooks/useRelayMetadata";
 
 function RelaySet({ event }: { event: NDKEvent }) {
   const title = useMemo(() => event.tagValue("title"), [event]);
   const relays = useMemo(() => {
     return event.tags.filter((t) => t[0] === "relay").map(tagToRelay);
   }, [event]);
+  const urls = relays.map((r) => r.url);
+  const results = useRelaysMetadata(urls);
+  const searchRelays = results
+    .map((r, idx) => {
+      return { url: relays[idx].url, data: r.data };
+    })
+    .filter((r) => r.data?.supported_nips.includes(50))
+    .map((r) => r.url);
   return relays.length > 0 ? (
     <Stack gap={4}>
       <HStack justify="space-between">
@@ -37,11 +47,15 @@ function RelaySet({ event }: { event: NDKEvent }) {
         <User pubkey={event.pubkey} size="xs" fontSize="sm" />
       </HStack>
       <Stack>
-        {relays.map((r) => (
-          <RelayLink key={r.url} url={r.url} />
+        {urls.map((url) => (
+          <RelayLink key={url} url={url} />
         ))}
       </Stack>
-      <RelaysFeed relays={relays.map((r) => r.url)} />
+      {searchRelays.length > 0 ? (
+        <SearchFeed searchRelays={searchRelays} relays={urls} />
+      ) : (
+        <RelaysFeed relays={urls} />
+      )}
     </Stack>
   ) : (
     <Alert status="error">

@@ -1,4 +1,4 @@
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { useQuery, useQueries, UseQueryResult } from "@tanstack/react-query";
 
 export type RelayMetadata = Record<string, any>;
 
@@ -27,5 +27,18 @@ export function useRelayMetadata(
     queryFn: () => getRelayMetadata(url),
     retry: false,
     retryOnMount: false,
+  });
+}
+
+export function useRelaysMetadata(urls: string[]) {
+  return useQueries({
+    queries: urls.map((url) => {
+      return {
+        queryKey: ["relay-metadata", url],
+        queryFn: () => getRelayMetadata(url),
+        retry: false,
+        retryOnMount: false,
+      };
+    }),
   });
 }

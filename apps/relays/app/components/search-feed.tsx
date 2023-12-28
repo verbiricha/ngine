@@ -17,10 +17,17 @@ import { FormattedMessage } from "react-intl";
 
 import { kinds, components } from "../kinds";
 
-export default function SearchFeed({ relays }: { relays: string[] }) {
+export default function SearchFeed({
+  searchRelays,
+  relays,
+}: {
+  searchRelays: string[];
+  relays: string[];
+}) {
   // todo: store search params in URL
   const [query, setQuery] = useState("");
   const [term, setTerm] = useState("");
+  const isSearching = query.trim().length > 0;
 
   function search() {
     setQuery(term);
@@ -71,10 +78,8 @@ export default function SearchFeed({ relays }: { relays: string[] }) {
       </FormControl>
       <Feed
         key={query}
-        filter={
-          query.trim().length === 0 ? { kinds } : { kinds, search: query }
-        }
-        relays={relays}
+        filter={isSearching ? { kinds, search: query } : { kinds }}
+        relays={isSearching ? searchRelays : relays}
         pageSize={10}
         components={components}
       />
