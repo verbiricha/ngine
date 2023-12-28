@@ -157,10 +157,45 @@ function extractNpubs(
               const raw = i.replace(NostrPrefixRegex, "");
               const decoded = nip19.decode(raw);
               if (decoded.type === "npub") {
-                const url = links?.npub ? links.npub(raw) : `/${raw}`;
+                const url = links?.npub ? links.npub(raw) : `nostr:${raw}`;
                 return (
                   <Link variant="brand" href={url}>
                     <Username as="span" pubkey={decoded.data as string} />
+                  </Link>
+                );
+              }
+              return null;
+            } catch (error) {
+              return i;
+            }
+          } else {
+            return i;
+          }
+        });
+      }
+      return f;
+    })
+    .flat();
+}
+
+function extractNrelays(
+  fragments: Fragment[],
+  Link: LinkComponent,
+  links?: Links,
+): Fragment[] {
+  return fragments
+    .map((f) => {
+      if (typeof f === "string") {
+        return f.split(/(nostr:nrelay1[a-z0-9]+)/g).map((i) => {
+          if (i.startsWith("nostr:nrelay1")) {
+            try {
+              const raw = i.replace(NostrPrefixRegex, "");
+              const decoded = nip19.decode(raw);
+              if (decoded.type === "nrelay") {
+                const url = links?.nrelay ? links.nrelay(raw) : `nostr:${raw}`;
+                return (
+                  <Link variant="brand" href={url}>
+                    {decoded.data}
                   </Link>
                 );
               }
@@ -325,6 +360,7 @@ function transformText(
 ): Fragment[] {
   let result = extractNprofiles(fragments, Link, links);
   result = extractNpubs(result, Link, links);
+  result = extractNrelays(result, Link, links);
   result = extractNevents(result, components);
   result = extractNoteIds(result, components);
   result = extractHashtags(result, Link, links);
@@ -400,6 +436,13 @@ export default function Markdown({
           </ListItem>
         );
       },
+      pre({ children }: { children: string }) {
+        return (
+          <Box as="pre" fontSize="sm" style={{ overflowX: "scroll" }}>
+            {children}
+          </Box>
+        );
+      },
       blockquote({ children }: { children: string }) {
         return <Blockquote>{children}</Blockquote>;
       },
@@ -413,7 +456,13 @@ export default function Markdown({
     };
   }, []);
   return (
-    <Stack dir="auto" wordBreak="break-word" {...rest}>
+    <Stack
+      dir="auto"
+      wordWrap="break-word"
+      wordBreak="break-word"
+      whiteSpace="pre-wrap"
+      {...rest}
+    >
       <ReactMarkdown
         // @ts-ignore
         components={markdownComponents}

@@ -6,8 +6,15 @@ import { Heading, Stack, HStack } from "@chakra-ui/react";
 import RelayFavicon from "./relay-favicon";
 import RelaySummary from "./relay-summary";
 import ToggleRelay from "./toggle-relay";
+import { RelayMetadata } from "../hooks/useRelayMetadata";
 
-export default function RelayMetadata({ url }: { url: string }) {
+export default function Metadata({
+  url,
+  metadata,
+}: {
+  url: string;
+  metadata: RelayMetadata;
+}) {
   const domain = useMemo(() => {
     return url.replace("ws://", "").replace("wss://", "");
   }, [url]);
@@ -23,7 +30,7 @@ export default function RelayMetadata({ url }: { url: string }) {
         </HStack>
         <ToggleRelay url={url} />
       </HStack>
-      <RelaySummary url={url} />
+      <RelaySummary url={url} metadata={metadata} />
     </Stack>
   );
 }

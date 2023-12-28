@@ -1,37 +1,38 @@
 "use client";
 
-import { useMemo } from "react";
-import { Stack, Alert, AlertIcon } from "@chakra-ui/react";
-import { nip19 } from "nostr-tools";
+import { Stack, Alert, AlertIcon, Skeleton } from "@chakra-ui/react";
 import { FormattedMessage } from "react-intl";
 
 import RelayMetadata from "./relay-metadata";
 import RelaysFeed from "./relays-feed";
+import SearchFeed from "./search-feed";
 
-export default function Relay({ nrelay }: { nrelay: string }) {
-  const url = useMemo(() => {
-    try {
-      const decoded = nip19.decode(nrelay);
-      if (decoded.type === "nrelay") {
-        return decoded.data;
-      }
-    } catch (error) {
-      return `wss://${decodeURIComponent(nrelay)}`;
-    }
-  }, [nrelay]);
-  return url ? (
+import { useRelayMetadata } from "../hooks/useRelayMetadata";
+
+export default function Relay({ url }: { url: string }) {
+  const { isError, isFetched, data } = useRelayMetadata(url);
+  const supportsSearch = data?.supported_nips.includes(50);
+  return (
     <Stack gap={4}>
-      <RelayMetadata url={url} />
-      <RelaysFeed relays={[url]} />
+      {isError ? (
+        <Alert status="error">
+          <AlertIcon />
+          <FormattedMessage
+            id="relay-info-fetch-error"
+            description="Error message when trying to fetch relay metadata"
+            defaultMessage="Could not fetch relay metadata"
+          />
+        </Alert>
+      ) : isFetched ? (
+        <RelayMetadata url={url} metadata={data} />
+      ) : (
+        <Skeleton height="42px" />
+      )}
+      {supportsSearch ? (
+        <SearchFeed relays={[url]} />
+      ) : (
+        <RelaysFeed relays={[url]} />
+      )}
     </Stack>
-  ) : (
-    <Alert status="error">
-      <AlertIcon />
-      <FormattedMessage
-        id="no-url"
-        description="No URL error message"
-        defaultMessage="No URL provided"
-      />
-    </Alert>
   );
 }

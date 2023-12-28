@@ -4,14 +4,17 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 import { useNDK } from "../context";
 
-export default function useProfile(pubkey: string) {
+export default function useProfile(
+  pubkey: string,
+  cacheUsage = NDKSubscriptionCacheUsage.CACHE_FIRST,
+) {
   const ndk = useNDK();
-  const query: UseQueryResult<NDKUserProfile, any> = useQuery({
+  const query: UseQueryResult<NDKUserProfile, Error> = useQuery({
     queryKey: ["profile", pubkey],
     queryFn: () => {
       const user = ndk.getUser({ hexpubkey: pubkey });
       return user.fetchProfile({
-        cacheUsage: NDKSubscriptionCacheUsage.CACHE_FIRST,
+        cacheUsage,
       });
     },
   });

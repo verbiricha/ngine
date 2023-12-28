@@ -15,7 +15,7 @@ import { theme } from "../theme";
 
 const cacheAdapter = new NDKCacheAdapterDexie({ dbName: "relays" });
 const ndk = new NDK({
-  explicitRelayUrls: [],
+  explicitRelayUrls: ["wss://nos.lol", "wss://relay.nostr.band"],
   outboxRelayUrls: ["wss://purplepag.es"],
   enableOutboxModel: true,
   cacheAdapter,
@@ -34,6 +34,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       links={{
         component: Link,
         npub: (npub) => `/p/${npub}`,
+        nrelay: (nrelay) => `/relay/${nrelay}`,
         nprofile: (nprofile) => `/p/${nprofile}`,
       }}
     >

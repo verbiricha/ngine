@@ -30,13 +30,10 @@ export type LinkComponent = (_: LinkProps) => ReactElement | null;
 export interface Links {
   component?: LinkComponent;
   npub?: (npub: string) => string;
+  nrelay?: (nrelay: string) => string;
   nprofile?: (nprofile: string) => string;
   nevent?: (nevent: string) => string;
   naddr?: (naddr: string) => string;
-  //nrelay
-  //p?: (p: string) => string;
-  //e?: (e: string) => string;
-  //a?: (a: string) => string;
   t?: (t: string) => string;
 }
 

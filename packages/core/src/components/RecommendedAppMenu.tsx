@@ -41,6 +41,9 @@ async function queryReccommendedApps(
       {
         kinds: [NDKKind.AppRecommendation],
         "#d": [String(event.kind)],
+        ...(contacts.length > 0 && event.kind === NDKKind.Text
+          ? { authors: contacts }
+          : {}),
       },
       {
         closeOnEose: true,

@@ -20,7 +20,7 @@ import RelaySet from "./relay-set";
 import { tagToRelay } from "../utils";
 
 export default function Profile({ pubkey }: { pubkey: string }) {
-  const profile = useProfile(pubkey);
+  const profile = useProfile(pubkey, NDKSubscriptionCacheUsage.PARALLEL);
   const event = useLatestEvent(
     {
       kinds: [NDKKind.RelayList],

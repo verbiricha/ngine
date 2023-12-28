@@ -22,18 +22,18 @@ import Link from "./link";
 import { useRelayMetadata, RelayMetadata } from "../hooks/useRelayMetadata";
 
 interface RelaySummaryProps {
-  info: RelayMetadata;
+  metadata: RelayMetadata;
 }
 
-function Description({ info }: RelaySummaryProps) {
-  const { description } = info;
+function Description({ metadata }: RelaySummaryProps) {
+  const { description } = metadata;
   return description ? (
     <Text color="chakra-subtle-text">{description}</Text>
   ) : null;
 }
 
-function PayToRelay({ info }: RelaySummaryProps) {
-  const { payments_url, fees } = info;
+function PayToRelay({ metadata }: RelaySummaryProps) {
+  const { payments_url, fees } = metadata;
   const admission = fees?.admission;
   return (
     <>
@@ -77,8 +77,8 @@ function PayToRelay({ info }: RelaySummaryProps) {
   );
 }
 
-function Nips({ info }: RelaySummaryProps) {
-  const { supported_nips } = info;
+function Nips({ metadata }: RelaySummaryProps) {
+  const { supported_nips } = metadata;
   return (
     <>
       {supported_nips && supported_nips.length > 0 && (
@@ -105,8 +105,8 @@ function Nips({ info }: RelaySummaryProps) {
   );
 }
 
-function Software({ info }: RelaySummaryProps) {
-  const { software } = info;
+function Software({ metadata }: RelaySummaryProps) {
+  const { software } = metadata;
   return (
     <>
       {software && (
@@ -130,8 +130,8 @@ function getCountryName(countryCode: string) {
   return displayNames.of(countryCode);
 }
 
-function Countries({ info }: RelaySummaryProps) {
-  const { relay_countries } = info;
+function Countries({ metadata }: RelaySummaryProps) {
+  const { relay_countries } = metadata;
   return (
     <>
       {relay_countries && (
@@ -159,8 +159,8 @@ function isHexString(str: string) {
   return hexRegex.test(str);
 }
 
-function Operator({ info }: RelaySummaryProps) {
-  const { pubkey, contact } = info;
+function Operator({ metadata }: RelaySummaryProps) {
+  const { pubkey, contact } = metadata;
   const hasOperator = isHexString(pubkey);
   return (
     <>
@@ -197,8 +197,8 @@ function getLanguageName(languageTag: string) {
   return displayNames.of(languageTag);
 }
 
-function CommunityPreferences({ info }: RelaySummaryProps) {
-  const { language_tags, tags, posting_policy } = info;
+function CommunityPreferences({ metadata }: RelaySummaryProps) {
+  const { language_tags, tags, posting_policy } = metadata;
   return (
     <>
       {language_tags && (
@@ -253,50 +253,16 @@ function CommunityPreferences({ info }: RelaySummaryProps) {
   );
 }
 
-export function RelaySummaryInfo({ info }: RelaySummaryProps) {
+export default function RelaySummary({ url, metadata }: RelaySummaryProps) {
   return (
     <Stack>
-      <Description info={info} />
-      <Nips info={info} />
-      <Operator info={info} />
-      <Software info={info} />
-      <PayToRelay info={info} />
-      <Countries info={info} />
-      <CommunityPreferences info={info} />
+      <Description metadata={metadata} />
+      <Nips metadata={metadata} />
+      <Operator metadata={metadata} />
+      <Software metadata={metadata} />
+      <PayToRelay metadata={metadata} />
+      <Countries metadata={metadata} />
+      <CommunityPreferences metadata={metadata} />
     </Stack>
-  );
-}
-
-function RelaySummaryFetch({ url }: { url: string }) {
-  const { isError, data } = useRelayMetadata(url);
-  if (isError) {
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        <FormattedMessage
-          id="relay-info-fetch-error"
-          description="Error message when trying to fetch relay metadata"
-          defaultMessage="Could not fetch relay metadata"
-        />
-      </Alert>
-    );
-  }
-  return data ? <RelaySummaryInfo key={url} info={data} /> : null;
-}
-
-export default function RelaySummary({ url }: { url: string }) {
-  const [isInView, setIsInView] = useState(false);
-  const { ref, inView } = useInView({
-    threshold: 0,
-  });
-  useEffect(() => {
-    if (inView) {
-      setIsInView(true);
-    }
-  }, [inView]);
-  return isInView ? (
-    <RelaySummaryFetch key={url} url={url} />
-  ) : (
-    <div ref={ref}></div>
   );
 }
