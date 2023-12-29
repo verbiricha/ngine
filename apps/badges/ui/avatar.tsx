@@ -1,9 +1,9 @@
-import { Box } from "@chakra-ui/react";
+import { Box, AvatarProps as BaseAvatarProps } from "@chakra-ui/react";
 import { Avatar as NostrAvatar } from "@ngine/core";
 
 import { gradient } from "./const";
 
-interface AvatarProps {
+interface AvatarProps extends BaseAvatarProps {
   p: number;
   pubkey: string;
 }

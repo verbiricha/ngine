@@ -21,46 +21,6 @@ import BadgeAward from "./badge-award";
 import ProfileBadge from "./profile-badge";
 import { gradient } from "./const";
 
-function Awards() {
-  return (
-    <Feed
-      filter={{
-        kinds: [NDKKind.BadgeAward],
-      }}
-      pageSize={3}
-      components={{
-        [NDKKind.BadgeAward]: BadgeAward,
-        [NDKKind.BadgeDefinition]: Badge,
-        [NDKKind.ProfileBadge]: ProfileBadge,
-      }}
-      hideShowMore
-      hideLoadMore
-    />
-  );
-}
-
-function Profiles() {
-  return (
-    <Feed
-      filter={{
-        kinds: [
-          //NDKKind.BadgeAward,
-          //NDKKind.BadgeDefinition,
-          NDKKind.ProfileBadge,
-        ],
-      }}
-      pageSize={3}
-      components={{
-        [NDKKind.BadgeAward]: BadgeAward,
-        [NDKKind.BadgeDefinition]: Badge,
-        [NDKKind.ProfileBadge]: ProfileBadge,
-      }}
-      hideShowMore
-      hideLoadMore
-    />
-  );
-}
-
 export default function Home() {
   const { events: badges, eose } = useEvents(
     {
@@ -95,11 +55,14 @@ export default function Home() {
     return [...badges].sort((a, b) => getPow(b.id) - getPow(a.id));
   }, [badges]);
   const topReceivers = useMemo(() => {
-    const pubkeyCounts = awards.reduce((counts, event) => {
-      const pubkey = event.pubkey;
-      counts[pubkey] = (counts[pubkey] || 0) + 1;
-      return counts;
-    }, {});
+    const pubkeyCounts = awards.reduce(
+      (counts, event) => {
+        const pubkey = event.pubkey;
+        counts[pubkey] = (counts[pubkey] || 0) + 1;
+        return counts;
+      },
+      {} as Record<string, number>,
+    );
 
     return Object.keys(pubkeyCounts).sort(
       (a, b) => pubkeyCounts[b] - pubkeyCounts[a],
@@ -141,7 +104,9 @@ export default function Home() {
                 borderBottom: "0.1px solid",
                 borderRightColor: "#F6F6FA",
                 borderBottomColor: "#F6F6FA",
+                // @ts-ignore
                 "border-top-left-radius": "32px",
+                // @ts-ignore
                 "border-bottom-right-radius": "32px",
               }}
             >

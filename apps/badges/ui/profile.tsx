@@ -92,10 +92,10 @@ export default function Profile({ pubkey }: { pubkey: string }) {
       >
         <Flex
           align={{ base: "center", md: "flex-start" }}
-          direction={{ base: "column", md: "row " }}
+          direction={{ base: "column", md: "row" }}
           gap={5}
         >
-          <Avatar pubkey={pubkey} size="xl" />
+          <Avatar p={1} pubkey={pubkey} size="xl" />
           <Stack gap={3}>
             <Username
               pubkey={pubkey}
@@ -122,12 +122,14 @@ export default function Profile({ pubkey }: { pubkey: string }) {
         </Flex>
         {highlighted && <Badge key={highlighted.id} event={highlighted} />}
       </Flex>
-      <ProfileTabs
-        profile={profile}
-        badges={badges}
-        awards={awards}
-        created={created}
-      />
+      {profile && (
+        <ProfileTabs
+          profile={profile}
+          badges={badges}
+          awards={awards}
+          created={created}
+        />
+      )}
     </Stack>
   );
 }

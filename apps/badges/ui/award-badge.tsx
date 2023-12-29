@@ -5,7 +5,7 @@ import { unixNow, useSign, User, AsyncButton, PubkeyPicker } from "@ngine/core";
 
 export default function AwardBadge({ event }: { event: NDKEvent }) {
   const sign = useSign();
-  const [pubkeys, setPubkeys] = useState([]);
+  const [pubkeys, setPubkeys] = useState<string[]>([]);
 
   function addPubkey(pk: string) {
     if (!pubkeys.includes(pk)) {

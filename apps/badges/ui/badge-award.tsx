@@ -31,9 +31,9 @@ interface BadgeAwardProps {
 export default function BadgeAward({ award, profile }: BadgeAwardProps) {
   const session = useSession();
   const a = award.tagValue("a");
-  const badge = useAddress(a);
+  const badge = useAddress(a!);
   const pubkeys = tagValues(award, "p");
-  const isForMe = pubkeys.includes(session?.pubkey);
+  const isForMe = pubkeys.includes(session?.pubkey || "");
 
   return (
     <Surface>
@@ -42,7 +42,7 @@ export default function BadgeAward({ award, profile }: BadgeAwardProps) {
         <AvatarGroup pubkeys={pubkeys} />
       </HStack>
       {badge && <Badge event={badge} />}
-      {badge && profile && isForMe && (
+      {badge && profile && session?.pubkey && isForMe && (
         <BadgeSettings
           badge={badge}
           award={award}

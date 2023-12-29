@@ -15,7 +15,7 @@ import {
   RadioGroup,
   Radio,
 } from "@chakra-ui/react";
-import { NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
+import { NostrEvent, NDKEvent, NDKKind } from "@nostr-dev-kit/ndk";
 import {
   useNDK,
   useSigner,
@@ -40,11 +40,11 @@ export default function NewBadge() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState();
-  const [thumbnail, setThumbnail] = useState();
+  const [image, setImage] = useState<string | undefined>();
+  const [thumbnail, setThumbnail] = useState<string | undefined>();
   const [minPow, setMinPow] = useState(0);
   const [isMining, setIsMining] = useState(false);
-  const [badge, setBadge] = useState();
+  const [badge, setBadge] = useState<NostrEvent | undefined>();
 
   const isValidBadge = name.trim().length > 0 && image;
 
@@ -54,7 +54,7 @@ export default function NewBadge() {
       new URL("../core/worker.ts", import.meta.url),
     );
     workerRef.current.onmessage = (event: MessageEvent<number>) => {
-      setBadge(event.data);
+      setBadge(event.data as unknown as NostrEvent);
       setIsMining(false);
     };
 
@@ -103,11 +103,8 @@ export default function NewBadge() {
   }
   async function createBadge() {
     try {
-      const event = await sign(preview);
-      if (event) {
-        await event.publish();
-        await router.push(`/a/${event.encode()}`);
-      }
+      await preview.publish();
+      await router.push(`/a/${preview.encode()}`);
     } catch (error) {}
   }
 
@@ -145,7 +142,6 @@ export default function NewBadge() {
         <FormControl>
           <FormLabel>Image</FormLabel>
           <ImagePicker
-            isDisabled={isMining}
             showPreview={false}
             buttonProps={{ variant: "outline", isDisabled: isMining }}
             inputProps={{ isDisabled: isMining }}
@@ -158,7 +154,6 @@ export default function NewBadge() {
         <FormControl>
           <FormLabel>Thumbnail</FormLabel>
           <ImagePicker
-            isDisabled={isMining}
             showPreview={false}
             buttonProps={{ variant: "outline", isDisabled: isMining }}
             inputProps={{ isDisabled: isMining }}
@@ -171,20 +166,20 @@ export default function NewBadge() {
             <RadioGroup
               isDisabled={isMining}
               colorScheme="gray"
-              value={minPow}
+              value={String(minPow)}
               onChange={(value) => setMinPow(Number(value))}
             >
               <HStack gap={4} wrap="wrap">
-                <Radio value={getMinPow(Rarities.Rare)}>
+                <Radio value={String(getMinPow(Rarities.Rare))}>
                   {rarityName(Rarities.Rare)}
                 </Radio>
-                <Radio value={getMinPow(Rarities.SuperRare)}>
+                <Radio value={String(getMinPow(Rarities.SuperRare))}>
                   {rarityName(Rarities.SuperRare)}
                 </Radio>
-                <Radio value={getMinPow(Rarities.Epic)}>
+                <Radio value={String(getMinPow(Rarities.Epic))}>
                   {rarityName(Rarities.Epic)}
                 </Radio>
-                <Radio value={getMinPow(Rarities.Legendary)}>
+                <Radio value={String(getMinPow(Rarities.Legendary))}>
                   {rarityName(Rarities.Legendary)}
                 </Radio>
               </HStack>

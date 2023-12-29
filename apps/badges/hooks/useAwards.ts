@@ -6,7 +6,10 @@ import {
 } from "@nostr-dev-kit/ndk";
 import { tagValues, useEvents } from "@ngine/core";
 
-export default function useAwards(badge: NDKEvent): NDKEvent[] {
+export default function useAwards(badge: NDKEvent): {
+  awards: NDKEvent[];
+  awardees: string[];
+} {
   const { events: awards } = useEvents(
     {
       kinds: [NDKKind.BadgeAward],
@@ -18,7 +21,7 @@ export default function useAwards(badge: NDKEvent): NDKEvent[] {
     },
   );
   const awardees = useMemo(() => {
-    return [...new Set(awards.map((aw) => tagValues(aw, "p")).flat())];
+    return Array.from(new Set(awards.map((aw) => tagValues(aw, "p")).flat()));
   }, [awards]);
 
   return { awards, awardees };

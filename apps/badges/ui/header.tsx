@@ -79,7 +79,7 @@ export default function Header() {
                 variant="link"
                 size="md"
                 as={Button}
-                rightIcon={null}
+                rightIcon={undefined}
               >
                 <Avatar p={0.5} pubkey={session.pubkey} size="md" />
               </MenuButton>

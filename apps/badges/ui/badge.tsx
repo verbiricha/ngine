@@ -6,12 +6,12 @@ import {
   Stack,
   StackProps,
   HStack,
-  HStackProps,
   Image,
   Heading,
   Text,
   Icon,
 } from "@chakra-ui/react";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
 import {
   useSession,
   useSigner,
@@ -172,12 +172,14 @@ export default function Badge({
         <Heading fontSize="lg" fontWeight={700} textAlign="center">
           {name}
         </Heading>
-        <Text color="chakra-subtle-text" fontSize="sm" textAlign="center">
-          <Markdown
-            content={showDetails ? description : description?.split("\n")[0]}
-            tags={event.tags}
-          />
-        </Text>
+        {description && (
+          <Text color="chakra-subtle-text" fontSize="sm" textAlign="center">
+            <Markdown
+              content={showDetails ? description : description?.split("\n")[0]}
+              tags={event.tags}
+            />
+          </Text>
+        )}
         {showDetails && <BadgeDetails event={event} rarity={rarity} />}
       </Surface>
       {showDetails && <Awardees event={event} />}

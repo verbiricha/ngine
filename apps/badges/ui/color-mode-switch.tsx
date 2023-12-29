@@ -18,7 +18,7 @@ export default function ColorModeSwitch() {
       <Text>Theme</Text>
 
       <HStack>
-        <Icon as={MoonIcon} boxsize={3} color={darkColor} />
+        <Icon as={MoonIcon} boxSize={3} color={darkColor} />
 
         <Switch
           colorScheme="brand"
@@ -27,7 +27,7 @@ export default function ColorModeSwitch() {
           size="sm"
         />
 
-        <Icon as={SunIcon} boxsize={3} color={lightColor} />
+        <Icon as={SunIcon} boxSize={3} color={lightColor} />
       </HStack>
     </HStack>
   );

@@ -10,6 +10,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/styled-system": "^2.9.2",
     "@fontsource/inter": "^5.0.16",
     "@ngine/core": "workspace:*",
     "@nostr-dev-kit/ndk": "^2.3.0",

@@ -38,7 +38,7 @@ export default function ProfileBadge({ event }: EventProps) {
   const addresses = [...new Set(badges)];
   const { events } = useAddresses(addresses);
   const sorted = useMemo(() => {
-    return [...events].sort((a, b) => getPow(b) - getPow(a));
+    return [...events].sort((a, b) => getPow(b.id) - getPow(a.id));
   }, [events]);
   const profile = useProfile(event.pubkey);
   return (

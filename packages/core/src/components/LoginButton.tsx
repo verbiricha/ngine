@@ -98,7 +98,7 @@ function LoginDialog({ methods, ...rest }: LoginDialogProps) {
 interface LoginButtonProps extends Pick<LoginProps, "onLogin"> {
   methods?: LoginMethod[];
   size?: string;
-  menuProps?: LoginMenuProps;
+  menuProps?: Omit<LoginMenuProps, "children">;
   buttonProps?: any;
   children: ReactNode;
 }

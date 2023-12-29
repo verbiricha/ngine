@@ -15,7 +15,7 @@ export default function useBadges(pubkey: string) {
     authors: [pubkey],
   });
   const addresses = profile ? tagValues(profile, "a") : [];
-  const badgeAdresses = [...new Set(addresses)];
+  const badgeAdresses = Array.from(new Set(addresses));
   const { events: badgeEvents } = useAddresses(badgeAdresses, {
     disable: addresses.length === 0,
     cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,

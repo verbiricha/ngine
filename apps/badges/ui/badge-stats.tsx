@@ -24,6 +24,7 @@ export default function BadgeStats({
   }, [badges]);
   return (
     <StatGroup gap={{ base: 12, lg: 20 }}>
+      {/* @ts-ignore */}
       <Stat align="center">
         <StatNumber fontSize="6xl">{zeroPlaceholder(badges.length)}</StatNumber>
         <StatLabel fontSize="xl" color="chakra-subtle-text">
@@ -31,6 +32,7 @@ export default function BadgeStats({
         </StatLabel>
       </Stat>
 
+      {/* @ts-ignore */}
       <Stat align="center">
         <StatNumber fontSize="6xl">{zeroPlaceholder(creators.size)}</StatNumber>
         <StatLabel fontSize="xl" color="chakra-subtle-text">
@@ -38,6 +40,7 @@ export default function BadgeStats({
         </StatLabel>
       </Stat>
 
+      {/* @ts-ignore */}
       <Stat align="center">
         <StatNumber fontSize="6xl">{zeroPlaceholder(awards.length)}</StatNumber>
         <StatLabel fontSize="xl" color="chakra-subtle-text">
