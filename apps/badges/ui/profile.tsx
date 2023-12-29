@@ -29,7 +29,7 @@ function ProfileTabs({
   awards,
   created,
 }: {
-  profile: NDKEvent;
+  profile?: NDKEvent;
   badges: NDKEvent[];
   awards: NDKEvent[];
   created: NDKEvent[];
@@ -122,14 +122,12 @@ export default function Profile({ pubkey }: { pubkey: string }) {
         </Flex>
         {highlighted && <Badge key={highlighted.id} event={highlighted} />}
       </Flex>
-      {profile && (
-        <ProfileTabs
-          profile={profile}
-          badges={badges}
-          awards={awards}
-          created={created}
-        />
-      )}
+      <ProfileTabs
+        profile={profile}
+        badges={badges}
+        awards={awards}
+        created={created}
+      />
     </Stack>
   );
 }

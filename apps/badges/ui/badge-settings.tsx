@@ -5,7 +5,7 @@ import { unixNow, tagValues, useSign, AsyncButton } from "@ngine/core";
 interface BadgeSettingsProps {
   badge: NDKEvent;
   award: NDKEvent;
-  profile: NDKEvent;
+  profile?: NDKEvent;
   pubkey: string;
 }
 
@@ -16,13 +16,14 @@ export default function BadgeSettings({
   pubkey,
 }: BadgeSettingsProps) {
   const sign = useSign();
-  const isWearing = tagValues(profile, "a").includes(badge.tagId());
+  const isWearing = profile
+    ? tagValues(profile, "a").includes(badge.tagId())
+    : false;
 
   async function wear() {
-    const tags = profile.tags.concat([
-      badge.tagReference(),
-      award.tagReference(),
-    ]);
+    const tags = profile
+      ? profile.tags.concat([badge.tagReference(), award.tagReference()])
+      : [badge.tagReference(), award.tagReference()];
     const ev = {
       kind: NDKKind.ProfileBadge,
       content: "",
@@ -40,15 +41,17 @@ export default function BadgeSettings({
   }
 
   async function remove() {
-    const tags = profile.tags.filter((t) => {
-      if (t[0] === "a") {
-        return t[1] !== badge.tagId();
-      }
-      if (t[0] === "e") {
-        return t[1] !== award.tagId();
-      }
-      return true;
-    });
+    const tags = profile
+      ? profile.tags.filter((t) => {
+          if (t[0] === "a") {
+            return t[1] !== badge.tagId();
+          }
+          if (t[0] === "e") {
+            return t[1] !== award.tagId();
+          }
+          return true;
+        })
+      : [];
     const ev = {
       kind: NDKKind.ProfileBadge,
       content: "",
