@@ -12,6 +12,7 @@ import {
   OrderedList,
   ListItem,
   SimpleGrid,
+  Button,
 } from "@chakra-ui/react";
 import {
   NDKEvent,
@@ -30,6 +31,7 @@ import {
 } from "@ngine/core";
 
 import useEmojiReactions from "@hooks/useEmojiReactions";
+import Link from "./link";
 import EmojiSet from "./emoji-set";
 import Reaction from "./reaction";
 import App from "./app";
@@ -73,11 +75,17 @@ function SupportingApps() {
   return (
     <Stack gap={6}>
       <Heading fontSize="5xl">Supported in</Heading>
-      <Flex gap={9} align="center" justify="center" wrap="wrap">
+      <SimpleGrid
+        columns={{
+          base: 1,
+          md: 2,
+        }}
+        spacing={6}
+      >
         {apps.map((ev) => (
           <App key={ev.id} event={ev} />
         ))}
-      </Flex>
+      </SimpleGrid>
     </Stack>
   );
 }
@@ -90,18 +98,6 @@ function HowTo() {
       align={{ base: "left", md: "center" }}
       justify="space-between"
     >
-      <Flex w={{ base: "100%", md: "md" }} align="center" justify="center">
-        <Emoji
-          alt="EZ"
-          src="https://cdn.betterttv.net/emote/5590b223b344e2c42a9e28e3/3x.webp"
-          boxSize={20}
-        />
-        <Emoji
-          alt="Clap"
-          src="https://cdn.betterttv.net/emote/55b6f480e66682f576dd94f5/3x.webp"
-          boxSize={20}
-        />
-      </Flex>
       <Stack>
         <Heading fontSize="5xl">How does it work?</Heading>
         <OrderedList fontSize="2xl">
@@ -110,12 +106,15 @@ function HowTo() {
           <ListItem>React</ListItem>
         </OrderedList>
       </Stack>
+      <Flex w={{ base: "100%", md: "md" }} align="center" justify="center">
+        <PepeParty />
+      </Flex>
     </Flex>
   );
 }
 
 function Hero() {
-  const bg = useColorModeValue("yellow.200", "gray.800");
+  const bg = useColorModeValue("yellow.100", "gray.800");
   return (
     <Flex
       align="center"
@@ -130,9 +129,9 @@ function Hero() {
       gap={6}
     >
       <Heading fontSize={{ base: "5xl", sm: "6xl" }}>
-        Spice up your reactions with{" "}
+        Stirr up your reactions with{" "}
         <Box as="mark" color="chakra-body-text" background={bg}>
-          custom emotes
+          custom emoji
         </Box>
       </Heading>
       <HighlightedNote />
@@ -140,70 +139,242 @@ function Hero() {
   );
 }
 
-function EmojiPacks() {
-  const contacts = useContacts();
-  const { events: lists, eose } = useEvents(
-    {
-      kinds: [NDKKind.EmojiList],
-    },
-    {
-      closeOnEose: true,
-      cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
-    },
+function EmojisBelt() {
+  const belt = [
+    "emoji",
+    "sushiyuki_belt",
+    "https://awayuki.github.io/emoji/v1-040.png",
+  ];
+  const emojis = [
+    [
+      "emoji",
+      "sushiyuki_belt_maguro",
+      "https://awayuki.github.io/emoji/v1-037.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_ebi",
+      "https://awayuki.github.io/emoji/v2-009.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_tamago",
+      "https://awayuki.github.io/emoji/v1-039.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_toro",
+      "https://awayuki.github.io/emoji/v2-001.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_tamago2",
+      "https://awayuki.github.io/emoji/v2-003.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_hamachi",
+      "https://awayuki.github.io/emoji/v2-005.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_ikura",
+      "https://awayuki.github.io/emoji/v2-007.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_salmon",
+      "https://awayuki.github.io/emoji/v2-011.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_kohada",
+      "https://awayuki.github.io/emoji/v2-013.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_ika",
+      "https://awayuki.github.io/emoji/v2-015.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_uni",
+      "https://awayuki.github.io/emoji/v2-017.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_anago",
+      "https://awayuki.github.io/emoji/v2-019.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_shari",
+      "https://awayuki.github.io/emoji/v2-021.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_maguro2",
+      "https://awayuki.github.io/emoji/v2-023.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_amaebi",
+      "https://awayuki.github.io/emoji/v2-025.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_negitoro",
+      "https://awayuki.github.io/emoji/v2-027.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_menegi",
+      "https://awayuki.github.io/emoji/v2-029.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_inari",
+      "https://awayuki.github.io/emoji/v2-031.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_saba",
+      "https://awayuki.github.io/emoji/v2-032.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_tekkamaki",
+      "https://awayuki.github.io/emoji/v2-033.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_kappamaki",
+      "https://awayuki.github.io/emoji/v2-034.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_kappa",
+      "https://awayuki.github.io/emoji/v2-035.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_heart1",
+      "https://awayuki.github.io/emoji/v2-036.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_heart2",
+      "https://awayuki.github.io/emoji/v2-037.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_beer",
+      "https://awayuki.github.io/emoji/v2-038.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_pudding",
+      "https://awayuki.github.io/emoji/v2-039.png",
+    ],
+    [
+      "emoji",
+      "sushiyuki_belt_coffee",
+      "https://awayuki.github.io/emoji/v2-040.png",
+    ],
+  ];
+  return (
+    // @ts-ignore
+    <marquee behavior="alternate">
+      <Emoji alt={belt[1]} src={belt[2]} boxSize={8} />
+      {emojis.map((t) => (
+        <>
+          <Emoji alt={t[1]} src={t[2]} boxSize={8} />
+          <Emoji alt={belt[1]} src={belt[2]} boxSize={8} />
+        </>
+      ))}
+      {/* @ts-ignore */}
+    </marquee>
   );
-  const addresses = useMemo(() => {
-    const addresses = lists.map((e) => tagValues(e, "a")).flat();
-    const frequencyMap: Record<string, number> = {};
+}
 
-    addresses.forEach((str) => {
-      frequencyMap[str] = (frequencyMap[str] || 0) + 1;
-    });
-
-    addresses.sort((a, b) => frequencyMap[b] - frequencyMap[a]);
-
-    const uniqueSet = new Set();
-    return addresses
-      .filter((str) => {
-        if (!uniqueSet.has(str)) {
-          uniqueSet.add(str);
-          return true;
-        }
-      })
-      .slice(0, 7);
-  }, [lists]);
+function FeaturedEmojiPacks() {
+  const addresses = [
+    "30030:cd408a69cc6c737ca1a76efc3fa247c6ca53ec807f6e7c9574164164797e8162:SUSHIYUKI",
+    "30030:7fa56f5d6962ab1e3cd424e758c3002b8665f7b0d8dcee9fe9e288d7751ac194:twitch",
+  ];
   const { events: emojiPacks } = useAddresses(addresses, {
-    disable: !eose,
+    cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
   });
   const emojis = emojiPacks
     .map((e) => e.tags.filter((t) => t[0] === "emoji"))
     .flat();
   return (
-    <>
-      {/* @ts-ignore */}
-      <marquee>
-        {emojis.map((t) => (
-          <Box key={t[1]} px={2} display="inline">
-            <Emoji alt={t[1]} src={t[2]} boxSize={8} />
-          </Box>
+    <Stack>
+      <Heading fontSize="5xl">Popular</Heading>
+      <SimpleGrid
+        columns={{
+          base: 1,
+          md: 2,
+        }}
+        spacing={6}
+      >
+        {emojiPacks.map((e) => (
+          <EmojiSet key={e.id} event={e} />
         ))}
-        {/* @ts-ignore */}
-      </marquee>
-      <Stack>
-        <Heading fontSize="5xl">Popular emoji sets</Heading>
-        <SimpleGrid
-          columns={{
-            base: 1,
-            md: 2,
-            xl: 3,
-          }}
-          spacing={6}
-        >
-          {emojiPacks.map((e) => (
-            <EmojiSet key={e.id} event={e} />
-          ))}
-        </SimpleGrid>
-      </Stack>
-    </>
+      </SimpleGrid>
+      <Flex align="center" justify="center" py={4}>
+        <Link variant="brand" href="/browse">
+          Browse all
+        </Link>
+      </Flex>
+    </Stack>
+  );
+}
+
+function PepeParty() {
+  const boxSize = 12;
+  return (
+    <Stack align="center">
+      <HStack gap={4}>
+        <Emoji
+          alt="xar2EDM"
+          src="https://cdn.betterttv.net/emote/5b7e01fbe429f82909e0013a/3x.webp"
+          boxSize={boxSize}
+        />
+        <Emoji
+          alt="peepoDJ"
+          src="https://cdn.betterttv.net/emote/6183da881f8ff7628e6c6653/3x.webp"
+          boxSize={boxSize}
+        />
+        <Emoji
+          alt="xar2EDM"
+          src="https://cdn.betterttv.net/emote/5b7e01fbe429f82909e0013a/3x.webp"
+          boxSize={boxSize}
+        />
+      </HStack>
+      <HStack gap={0}>
+        <Emoji
+          alt="Dance"
+          src="https://cdn.betterttv.net/emote/5aa1d0e311237146531078b0/3x.webp"
+          boxSize={boxSize}
+        />
+        <Emoji
+          alt="Dance"
+          src="https://cdn.betterttv.net/emote/5aa1d0e311237146531078b0/3x.webp"
+          boxSize={boxSize}
+        />
+        <Emoji
+          alt="Dance"
+          src="https://cdn.betterttv.net/emote/5aa1d0e311237146531078b0/3x.webp"
+          boxSize={boxSize}
+        />
+        <Emoji
+          alt="Dance"
+          src="https://cdn.betterttv.net/emote/5aa1d0e311237146531078b0/3x.webp"
+          boxSize={boxSize}
+        />
+      </HStack>
+    </Stack>
   );
 }
 
@@ -211,13 +382,14 @@ export default function Home() {
   return (
     <Stack
       gap={{
-        base: 6,
+        base: 12,
         md: 16,
       }}
     >
       <Hero />
+      <EmojisBelt />
       <HowTo />
-      <EmojiPacks />
+      <FeaturedEmojiPacks />
       <SupportingApps />
     </Stack>
   );

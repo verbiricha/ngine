@@ -7,8 +7,9 @@ import {
   MenuItem,
   MenuDivider,
   Button,
+  Image,
 } from "@chakra-ui/react";
-import { useSession, User, LoginButton, Emoji } from "@ngine/core";
+import { useSession, User, LoginButton } from "@ngine/core";
 import { AddIcon } from "@chakra-ui/icons";
 import { nip19 } from "nostr-tools";
 
@@ -30,49 +31,10 @@ export default function Header() {
     >
       <Flex flexDirection="column">
         <Link href="/" sx={{ _hover: { textDecoration: "none" } }}>
-          <Heading>
-            <Stack align="center">
-              <HStack gap={4}>
-                <Emoji
-                  alt="xar2EDM"
-                  src="https://cdn.betterttv.net/emote/5b7e01fbe429f82909e0013a/3x.webp"
-                  boxSize={8}
-                />
-                <Emoji
-                  alt="peepoDJ"
-                  src="https://cdn.betterttv.net/emote/6183da881f8ff7628e6c6653/3x.webp"
-                  boxSize={8}
-                />
-                <Emoji
-                  alt="xar2EDM"
-                  src="https://cdn.betterttv.net/emote/5b7e01fbe429f82909e0013a/3x.webp"
-                  boxSize={8}
-                />
-              </HStack>
-              <HStack gap={0}>
-                <Emoji
-                  alt="Dance"
-                  src="https://cdn.betterttv.net/emote/5aa1d0e311237146531078b0/3x.webp"
-                  boxSize={8}
-                />
-                <Emoji
-                  alt="Dance"
-                  src="https://cdn.betterttv.net/emote/5aa1d0e311237146531078b0/3x.webp"
-                  boxSize={8}
-                />
-                <Emoji
-                  alt="Dance"
-                  src="https://cdn.betterttv.net/emote/5aa1d0e311237146531078b0/3x.webp"
-                  boxSize={8}
-                />
-                <Emoji
-                  alt="Dance"
-                  src="https://cdn.betterttv.net/emote/5aa1d0e311237146531078b0/3x.webp"
-                  boxSize={8}
-                />
-              </HStack>
-            </Stack>
-          </Heading>
+          <HStack gap={0}>
+            <Image alt="emojito logo" src="/logo.png" boxSize={20} style={{ transform: "scale(1.2)" }} />
+            <Heading fontSize="3xl">emojito</Heading>
+          </HStack>
         </Link>
       </Flex>
       <HStack>

@@ -1,6 +1,7 @@
 export const metadata = {
-  title: "Emoji",
-  description: "Manage your emoji collections",
+  metadataBase: new URL("https://emojito.meme"),
+  title: "emojito",
+  description: "Stirr up your reactions with custom emoji",
 };
 
 export default function RootLayout({

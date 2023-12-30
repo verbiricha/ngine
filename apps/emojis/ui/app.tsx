@@ -22,7 +22,7 @@ export default function App({ event }: EventProps) {
   }, [event]);
   const href = app?.website;
   return (
-    <Card>
+    <Card variant="outline">
       <CardBody>
         <Stack align="center">
           <Image src={app?.picture} boxSize={24} borderRadius="100%" />
