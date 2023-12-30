@@ -223,22 +223,24 @@ export default function RecommendedAppMenu({
             defaultMessage="Nostr link"
           />
         </MenuItem>
-        <MenuGroup
-          title={formatMessage({
-            id: "ngine.open-nostr-app-title",
-            description: "Title of nostr app menu",
-            defaultMessage: "Apps",
-          })}
-        >
-          {recommended?.map(({ ev, recommenders }) => (
-            <AppMenuItem
-              key={ev.tagId()}
-              unknownEvent={event}
-              event={ev}
-              recommenders={recommenders}
-            />
-          ))}
-        </MenuGroup>
+        {recommended?.length > 0 && (
+          <MenuGroup
+            title={formatMessage({
+              id: "ngine.open-nostr-app-title",
+              description: "Title of nostr app menu",
+              defaultMessage: "Apps",
+            })}
+          >
+            {recommended?.map(({ ev, recommenders }) => (
+              <AppMenuItem
+                key={ev.tagId()}
+                unknownEvent={event}
+                event={ev}
+                recommenders={recommenders}
+              />
+            ))}
+          </MenuGroup>
+        )}
       </MenuList>
     </Menu>
   );

@@ -129,7 +129,7 @@ function Hero() {
       gap={6}
     >
       <Heading fontSize={{ base: "5xl", sm: "6xl" }}>
-        Stirr up your reactions with{" "}
+        Stir up your reactions with{" "}
         <Box as="mark" color="chakra-body-text" background={bg}>
           custom emoji
         </Box>

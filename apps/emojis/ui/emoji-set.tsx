@@ -111,7 +111,6 @@ export default function EmojiSet({ event }: EventProps) {
               size="xs"
               variant="outline"
               colorScheme="brand"
-              isDisabled={!canSign}
               rightIcon={<Icon as={ChevronDownIcon} />}
             >
               Options
@@ -125,18 +124,24 @@ export default function EmojiSet({ event }: EventProps) {
               </MenuItem>
               {isBookmarked ? (
                 <MenuItem
+                  isDisabled={!canSign}
                   icon={<Icon as={DeleteIcon} />}
                   onClick={removeBookmark}
                 >
                   Unbookmark
                 </MenuItem>
               ) : (
-                <MenuItem icon={<Icon as={StarIcon} />} onClick={addBookmark}>
+                <MenuItem
+                  isDisabled={!canSign}
+                  icon={<Icon as={StarIcon} />}
+                  onClick={addBookmark}
+                >
                   Bookmark
                 </MenuItem>
               )}
               {isMine && (
                 <MenuItem
+                  isDisabled={!canSign}
                   icon={<Icon as={EditIcon} />}
                   onClick={() => router.push(`/a/${event.encode()}/edit`)}
                 >

@@ -30,11 +30,13 @@ export default function Header() {
       px={4}
     >
       <Flex flexDirection="column">
-        <Link href="/" sx={{ _hover: { textDecoration: "none" } }}>
-          <HStack gap={0}>
-            <Image alt="emojito logo" src="/logo.png" boxSize={20} style={{ transform: "scale(1.2)" }} />
-            <Heading fontSize="3xl">emojito</Heading>
-          </HStack>
+        <Link href="/">
+          <Image
+            alt="emojito logo"
+            src="/logo.png"
+            boxSize={20}
+            style={{ transform: "scale(1.5)" }}
+          />
         </Link>
       </Flex>
       <HStack>
