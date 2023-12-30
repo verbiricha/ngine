@@ -11,7 +11,7 @@ export default function Browse() {
     <Layout>
       <Feed
         closeOnEose
-        pageSize={20}
+        pageSize={10}
         filter={{
           kinds: [NDKKind.EmojiSet],
         }}
