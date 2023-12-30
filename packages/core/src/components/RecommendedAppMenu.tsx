@@ -223,7 +223,7 @@ export default function RecommendedAppMenu({
             defaultMessage="Nostr link"
           />
         </MenuItem>
-        {recommended?.length > 0 && (
+        {recommended?.length && recommended?.length > 0 && (
           <MenuGroup
             title={formatMessage({
               id: "ngine.open-nostr-app-title",
