@@ -20,7 +20,7 @@ export function getPow(id: string) {
   return nip13.getPow(id);
 }
 
-const LEGENDARY = 64;
+const LEGENDARY = 42;
 const EPIC = 32;
 const SUPER_RARE = 21;
 const RARE = 12;
