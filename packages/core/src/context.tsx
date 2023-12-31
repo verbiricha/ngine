@@ -24,7 +24,6 @@ import NDK, {
   NDKEvent,
   NDKSigner,
   NDKSubscriptionCacheUsage,
-  NDKRelayAuthPolicies,
 } from "@nostr-dev-kit/ndk";
 import { generatePrivateKey, getPublicKey } from "nostr-tools";
 
@@ -158,11 +157,9 @@ export const NgineProvider = ({
     if (session?.method === "nip07") {
       const signer = new NDKNip07Signer();
       ndk.signer = signer;
-      ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk, signer });
     } else if (session?.method === "nsec") {
       const signer = new NDKPrivateKeySigner(session.privkey);
       ndk.signer = signer;
-      ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk, signer });
     }
   }, [session]);
 
@@ -171,7 +168,6 @@ export const NgineProvider = ({
     const user = await signer.blockUntilReady();
     if (user) {
       ndk.signer = signer;
-      ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk, signer });
       setSession({
         method: "nip07",
         pubkey: user.pubkey,
@@ -197,7 +193,6 @@ export const NgineProvider = ({
     const user = await signer.blockUntilReady();
     if (user) {
       ndk.signer = signer;
-      ndk.relayAuthDefaultPolicy = NDKRelayAuthPolicies.signIn({ ndk, signer });
       setSession({
         method: "nsec",
         pubkey: user.pubkey,
@@ -224,7 +219,6 @@ export const NgineProvider = ({
 
   function logOut() {
     ndk.signer = undefined;
-    ndk.relayAuthDefaultPolicy = undefined;
     setSession(null);
     setFollows(null);
     setRelays(null);
