@@ -13,9 +13,9 @@ export default function Footer(props: StackProps) {
       {...props}
     >
       <Text color="chakra-subtle-text">
-        Made with ❤️ by{" "}
-        <Link variant="brand" href="https://snort.social/verbiricha">
-          verbiricha
+        Relay data provided by
+        <Link variant="brand" href="https://nostr.watch">
+          nostr.watch
         </Link>
       </Text>
       <Text color="chakra-subtle-text">

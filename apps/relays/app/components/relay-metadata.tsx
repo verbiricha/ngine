@@ -7,6 +7,7 @@ import RelayFavicon from "./relay-favicon";
 import RelaySummary from "./relay-summary";
 import ToggleRelay from "./toggle-relay";
 import { RelayMetadata } from "../hooks/useRelayMetadata";
+import { humanize } from "@lib/urls";
 
 export default function Metadata({
   url,
@@ -15,9 +16,7 @@ export default function Metadata({
   url: string;
   metadata: RelayMetadata;
 }) {
-  const domain = useMemo(() => {
-    return url.replace("ws://", "").replace("wss://", "");
-  }, [url]);
+  const domain = useMemo(() => humanize(url), [url]);
 
   return (
     <Stack>

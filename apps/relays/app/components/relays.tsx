@@ -3,58 +3,73 @@
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import {
-  Alert,
-  AlertIcon,
   Stack,
   Button,
-  Text,
   Icon,
   Input,
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatGroup,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { useIntl, FormattedMessage } from "react-intl";
 import { useRelays } from "@ngine/core";
 
 import RelayLink from "./relay-link";
 import RelayIcon from "./relay-icon";
-import { encodeRelayURL } from "../utils";
+import { humanize, encode } from "@lib/urls";
+import useRelayStatus from "@hooks/useRelayStatus";
 
 export default function Relays() {
   const { formatMessage } = useIntl();
   const router = useRouter();
   const [relay, setRelay] = useState("");
+  const { events, online, offline } = useRelayStatus();
   const myRelays = useRelays();
-  const { data, isFetched, isError } = useQuery({
-    queryKey: ["relays"],
-    queryFn: () =>
-      fetch(`https://api.nostr.watch/v1/online`).then((r) => r.json()),
-  });
+  const relaySet = useMemo(() => new Set(myRelays.map(humanize)), [myRelays]);
 
   function relayScore(url: string) {
-    if (myRelays.includes(url)) {
-      return 1;
+    if (relaySet.has(humanize(url))) {
+      return 42;
     }
     return 0;
   }
 
   const relays = useMemo(() => {
-    const raw = data
-      ? [...data].sort((a, b) => relayScore(b) - relayScore(a))
-      : [];
+    const raw = [...online].sort((a, b) => relayScore(b) - relayScore(a));
     return raw
       .filter((url) => url.toLowerCase().includes(relay.toLowerCase()))
       .slice(0, 21);
-  }, [relay, data, myRelays]);
+  }, [online, relay]);
 
   function goToRelay(url: string) {
-    router.push(`/relay/${encodeRelayURL(url)}`);
+    router.push(`/relay/${encode(url)}`);
   }
 
   return (
     <Stack spacing={4} w="100%">
+      <StatGroup>
+        {/* @ts-ignore */}
+        <Stat align="center">
+          <StatNumber>{events.length}</StatNumber>
+          <StatLabel>Relays</StatLabel>
+        </Stat>
+
+        {/* @ts-ignore */}
+        <Stat align="center">
+          <StatNumber>{online.length}</StatNumber>
+          <StatLabel>Online</StatLabel>
+        </Stat>
+
+        {/* @ts-ignore */}
+        <Stat align="center">
+          <StatNumber>{offline.length}</StatNumber>
+          <StatLabel>Offline</StatLabel>
+        </Stat>
+      </StatGroup>
       <InputGroup>
         <InputLeftElement
           pointerEvents="none"
@@ -93,28 +108,9 @@ export default function Relays() {
         </InputRightElement>
       </InputGroup>
       <Stack>
-        {isError && (
-          <Alert>
-            <AlertIcon />
-            <FormattedMessage
-              id="cant-fetch-relays"
-              description="Error message shown when can't fetch online relays"
-              defaultMessage="Could not fetch online relays"
-            />
-          </Alert>
-        )}
-        {isFetched &&
-          relays.map((url: string) => <RelayLink key={url} url={url} />)}
-        {isFetched && relays.length === 0 && (
-          <Text color="chakra-subtle-text">
-            <FormattedMessage
-              id="no-relays-found"
-              description="Message shown when no known relay matches the search pattern"
-              defaultMessage="No relays match the term `{ relay }`"
-              values={{ relay }}
-            />
-          </Text>
-        )}
+        {relays.map((url) => (
+          <RelayLink key={url} url={url} />
+        ))}
       </Stack>
     </Stack>
   );

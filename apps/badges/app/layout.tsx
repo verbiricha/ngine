@@ -1,5 +1,5 @@
 export const metadata = {
-  metadataBase: new URL('https://badges.page'),
+  metadataBase: new URL("https://badges.page"),
   title: "Badges",
   description: "Create, collect and award badges",
 };

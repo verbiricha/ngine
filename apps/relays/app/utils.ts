@@ -19,7 +19,7 @@ export function relayToTag(r: Relay): Tag {
 }
 
 export function tagToRelay(t: Tag): Relay {
-  const url = t[1].replace(/\/$/, "");
+  const url = t[1];
 
   if (t[2] === "read") {
     return { url, read: true, write: false };
