@@ -5,7 +5,7 @@ import { useRelays } from "@ngine/core";
 
 import Link from "./link";
 import RelayFavicon from "./relay-favicon";
-import { humanize, encode } from "@lib/urls";
+import { encodeRelayURL } from "../utils";
 
 interface RelayLinkProps {
   url: string;
@@ -13,12 +13,11 @@ interface RelayLinkProps {
 
 export default function RelayLink({ url }: RelayLinkProps) {
   const relays = useRelays();
-  const isInMyRelays = useMemo(
-    () => relays.map(humanize).includes(humanize(url)),
-    [relays, url],
-  );
-  const encoded = useMemo(() => `/relay/${encode(url)}`, [url]);
-  const domain = useMemo(() => humanize(url), [url]);
+  const isInMyRelays = useMemo(() => relays.includes(url), [relays, url]);
+  const encoded = useMemo(() => `/relay/${encodeRelayURL(url)}`, [url]);
+  const domain = useMemo(() => {
+    return url.replace("ws://", "").replace("wss://", "");
+  }, [url]);
   return (
     <Link key={url} href={encoded}>
       <HStack spacing={2}>

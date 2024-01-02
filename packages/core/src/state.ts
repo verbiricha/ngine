@@ -18,7 +18,7 @@ export const relaysAtom = atom<Relay[]>((get) => {
     relayList?.tags
       .filter((t) => t[0] === "r")
       .map((t) => {
-        const url = t[1];
+        const url = t[1].replace(/\/$/, "");
         const read = t.length === 2 || t[2] === "read";
         const write = t.length === 2 || t[2] === "write";
         return { url, read, write };

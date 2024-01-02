@@ -16,8 +16,6 @@
     "baseUrl": "./",
     "paths": {
       "@ui/*": ["ui/*"],
-      "@hooks/*": ["hooks/*"],
-      "@lib/*": ["lib/*"],
     }
   },
   "include": [

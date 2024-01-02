@@ -15,11 +15,7 @@ import { theme } from "./theme";
 
 const cacheAdapter = new NDKCacheAdapterDexie({ dbName: "emojis" });
 const ndk = new NDK({
-  explicitRelayUrls: [
-    "wss://nos.lol",
-    "wss://relay.nostr.band",
-    "wss://frens.nostr1.com",
-  ],
+  explicitRelayUrls: ["wss://nos.lol", "wss://relay.nostr.band", "wss://frens.nostr1.com"],
   outboxRelayUrls: ["wss://purplepag.es"],
   enableOutboxModel: true,
   cacheAdapter,
