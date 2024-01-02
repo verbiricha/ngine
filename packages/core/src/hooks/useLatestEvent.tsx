@@ -24,7 +24,7 @@ export default function useLatestEvent(
         relays?.length ?? 0 > 0
           ? NDKRelaySet.fromRelayUrls(relays as string[], ndk)
           : undefined;
-      const sub = ndk.subscribe({ ...filter, limit: 1 }, opts, relaySet);
+      const sub = ndk.subscribe(filter, opts, relaySet);
       sub.on("event", (ev: NDKEvent) => {
         const lastSeen = event?.created_at ?? 0;
         const createdAt = ev?.created_at ?? 0;
