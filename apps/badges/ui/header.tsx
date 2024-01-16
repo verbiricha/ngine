@@ -70,7 +70,6 @@ export default function Header() {
           </Button>
         )}
         <LoginButton
-          methods={["nip07", "npub"]}
           buttonProps={{ variant: "gradient", size: "sm" }}
           menuProps={{
             button: session?.pubkey ? (
