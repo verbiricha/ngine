@@ -243,11 +243,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.0
-        version: 2.3.0(typescript@5.3.2)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.2)
       '@nostr-dev-kit/ndk-cache-dexie':
-        specifier: ^2.2.1
-        version: 2.2.1(typescript@5.3.2)
+        specifier: ^2.2.4
+        version: 2.2.4(typescript@5.3.2)
       '@tanstack/react-query':
         specifier: ^5.13.4
         version: 5.13.4(react@18.2.0)
@@ -4564,6 +4564,19 @@ packages:
     resolution: {integrity: sha512-r2MLf0imri3b4xZ/d+0R4HrMzIuarb99ERgHuYVQJK8YANVq+5nWg+Dzl05ShPNaRDCTnSFrdg3bA9hw6+rGtA==}
     dependencies:
       '@nostr-dev-kit/ndk': 2.3.0(typescript@5.3.2)
+      debug: 4.3.4
+      dexie: 3.2.4
+      nostr-tools: 1.17.0(typescript@5.3.2)
+      typescript-lru-cache: 2.0.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: false
+
+  /@nostr-dev-kit/ndk-cache-dexie@2.2.4(typescript@5.3.2):
+    resolution: {integrity: sha512-HPdA+YnGrbNuXuqvGf1KpRoDo2avaqvJLlRE1iH8W8Yp45T8efJV9/UmT/OU7YgIoeL6k0y5F1zOCLu4P3pJSg==}
+    dependencies:
+      '@nostr-dev-kit/ndk': 2.3.3(typescript@5.3.2)
       debug: 4.3.4
       dexie: 3.2.4
       nostr-tools: 1.17.0(typescript@5.3.2)
