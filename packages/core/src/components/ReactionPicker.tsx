@@ -148,7 +148,7 @@ export default function ReactionPicker({
     try {
       setIsBusy(true);
       if (emoji.native) {
-        await event.react(emoji);
+        await event.react(emoji.native);
         const msg = formatMessage(
           {
             id: "ngine.react-success",
