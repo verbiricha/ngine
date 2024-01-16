@@ -153,7 +153,7 @@ export default function ReactionPicker({
           {
             id: "ngine.react-success",
             description: "Success message for reactions",
-            defaultMessage: "Reacted with",
+            defaultMessage: "Reacted with {emoji}",
           },
           { emoji: emoji.native },
         );
