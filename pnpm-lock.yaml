@@ -337,8 +337,8 @@ importers:
         specifier: ^1.3.3
         version: 1.3.3
       '@nostr-dev-kit/ndk':
-        specifier: ^2.3.0
-        version: 2.3.0(typescript@5.3.2)
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.3.2)
       '@scure/base':
         specifier: ^1.1.5
         version: 1.1.5
@@ -4575,6 +4575,25 @@ packages:
 
   /@nostr-dev-kit/ndk@2.3.0(typescript@5.3.2):
     resolution: {integrity: sha512-d2QPM0cml3/IUm1Yh4uUSQZxEnMmFByjWVplJjrYYQ5k+phvkI3+bo1PZcdeO1HWyQvN+EZqamsfCp7mTLKNjw==}
+    dependencies:
+      '@noble/hashes': 1.3.3
+      '@noble/secp256k1': 2.0.0
+      '@scure/base': 1.1.5
+      debug: 4.3.4
+      light-bolt11-decoder: 3.0.0
+      node-fetch: 3.3.2
+      nostr-tools: 1.17.0(typescript@5.3.2)
+      tseep: 1.1.3
+      typescript-lru-cache: 2.0.0
+      utf8-buffer: 1.0.0
+      websocket-polyfill: 0.0.3
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: false
+
+  /@nostr-dev-kit/ndk@2.3.3(typescript@5.3.2):
+    resolution: {integrity: sha512-R2r6U1Xt4B7yygQFgTEexNqhuQQrbJ0Kxh4GvcCgNgSjMI+cPJQPWg4g4noWGRnaWf4epqLNCblfo5UfMuijTw==}
     dependencies:
       '@noble/hashes': 1.3.3
       '@noble/secp256k1': 2.0.0

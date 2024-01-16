@@ -3,6 +3,14 @@
     "defaultMessage": "Bookmarks ({count})",
     "description": "Bookmarks count"
   },
+  "ngine.bunker-login": {
+    "defaultMessage": "Log in",
+    "description": "A button for logging in with a nsecbunker"
+  },
+  "ngine.bunker-url-placeholder": {
+    "defaultMessage": "bunker://",
+    "description": "Bunker URL placeholder"
+  },
   "ngine.comment-label": {
     "defaultMessage": "Comment",
     "description": "Comment field label"
@@ -91,6 +99,10 @@
     "defaultMessage": "You can use a nostr extension to log in to the site.",
     "description": "Description of extension login section"
   },
+  "ngine.login-nip46": {
+    "defaultMessage": "Nsecbunker",
+    "description": "Title of nip46 login section"
+  },
   "ngine.login-npub": {
     "defaultMessage": "Public key",
     "description": "Title of pubkey login section"
@@ -98,6 +110,10 @@
   "ngine.login-npub-descr": {
     "defaultMessage": "You can log in with a pubkey or nostr address for browsing the site in read-only mode.",
     "description": "Description of pubkey login section"
+  },
+  "ngine.login-nsecbunker-descr": {
+    "defaultMessage": "You can log in with nsecbunker URL and sign events remotely",
+    "description": "Description of nsecbunker login description"
   },
   "ngine.menu-reactions": {
     "defaultMessage": "Reactions",
@@ -193,6 +209,10 @@
   },
   "ngine.react-success": {
     "defaultMessage": "Reacted with",
+    "description": "Success message for reactions"
+  },
+  "ngine.react-success-native": {
+    "defaultMessage": "Reacted with {emoji}",
     "description": "Success message for reactions"
   },
   "ngine.react-to": {

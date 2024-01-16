@@ -41,6 +41,24 @@ function LoginOption({ method, onLogin }: LoginProps) {
           </Text>
         </>
       )}
+      {method === "nip46" && (
+        <>
+          <Heading fontSize="xl">
+            <FormattedMessage
+              id="ngine.login-nip46"
+              description="Title of nip46 login section"
+              defaultMessage="Nsecbunker"
+            />
+          </Heading>
+          <Text>
+            <FormattedMessage
+              id="ngine.login-nsecbunker-descr"
+              description="Description of nsecbunker login description"
+              defaultMessage="You can log in with nsecbunker URL and sign events remotely"
+            />
+          </Text>
+        </>
+      )}
       {method === "npub" && (
         <>
           <Heading fontSize="xl">
@@ -104,7 +122,7 @@ interface LoginButtonProps extends Pick<LoginProps, "onLogin"> {
 }
 
 export default function LoginButton({
-  methods = ["nip07", "npub"],
+  methods = ["nip07", "nip46", "npub"],
   children,
   onLogin,
   size,

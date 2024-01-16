@@ -151,9 +151,9 @@ export default function ReactionPicker({
         await event.react(emoji.native);
         const msg = formatMessage(
           {
-            id: "ngine.react-success",
+            id: "ngine.react-success-native",
             description: "Success message for reactions",
-            defaultMessage: "Reacted with {emoji}",
+            defaultMessage: "Reacted with { emoji }",
           },
           { emoji: emoji.native },
         );

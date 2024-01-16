@@ -18,6 +18,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NDK, {
   NDKKind,
   NDKNip07Signer,
+  NDKNip46Signer,
   NDKPrivateKeySigner,
   NDKUser,
   NostrEvent,
@@ -39,6 +40,7 @@ const queryClient = new QueryClient();
 interface NgineContextProps {
   ndk: NDK;
   nip07Login: () => Promise<NDKUser | undefined>;
+  nip46Login: (url: string) => Promise<NDKUser | undefined>;
   nsecLogin: (nsec: string) => Promise<NDKUser>;
   npubLogin: (npub: string) => Promise<NDKUser>;
   sign: (
@@ -52,6 +54,9 @@ interface NgineContextProps {
 const NgineContext = createContext<NgineContextProps>({
   ndk: new NDK({ explicitRelayUrls: [] }),
   nip07Login: () => {
+    return Promise.reject();
+  },
+  nip46Login: () => {
     return Promise.reject();
   },
   nsecLogin: () => {
@@ -160,7 +165,20 @@ export const NgineProvider = ({
     } else if (session?.method === "nsec") {
       const signer = new NDKPrivateKeySigner(session.privkey);
       ndk.signer = signer;
+    } else if (session?.method === "nip46" && session.bunker) {
+      const { privkey, pubkey, relays } = session.bunker;
+      const localSigner = new NDKPrivateKeySigner(privkey);
+      const bunkerNDK = new NDK({ explicitRelayUrls: relays });
+      bunkerNDK.connect().then(() => {
+        const signer = new NDKNip46Signer(
+          bunkerNDK,
+          session.pubkey,
+          localSigner,
+        );
+        ndk.signer = signer;
+      });
     }
+    // todo: nip05
   }, [session]);
 
   async function nip07Login() {
@@ -171,6 +189,32 @@ export const NgineProvider = ({
       setSession({
         method: "nip07",
         pubkey: user.pubkey,
+      });
+    }
+    return user;
+  }
+
+  async function nip46Login(url: string) {
+    const asURL = new URL(url);
+    const relays = asURL.searchParams.getAll("relay");
+    const pubkey = asURL.pathname.replace(/^\/\//, "");
+    const bunkerNDK = new NDK({
+      explicitRelayUrls: relays,
+    });
+    await bunkerNDK.connect();
+    const localSigner = NDKPrivateKeySigner.generate();
+    const signer = new NDKNip46Signer(bunkerNDK, pubkey, localSigner);
+    const user = await signer.blockUntilReady();
+    if (user) {
+      ndk.signer = signer;
+      setSession({
+        method: "nip46",
+        pubkey: user.pubkey,
+        bunker: {
+          privkey: localSigner.privateKey as string,
+          pubkey,
+          relays,
+        },
       });
     }
     return user;
@@ -226,7 +270,16 @@ export const NgineProvider = ({
 
   return (
     <NgineContext.Provider
-      value={{ ndk, nip07Login, nsecLogin, npubLogin, sign, logOut, links }}
+      value={{
+        ndk,
+        nip07Login,
+        nip46Login,
+        nsecLogin,
+        npubLogin,
+        sign,
+        logOut,
+        links,
+      }}
     >
       <IntlProvider
         defaultLocale="en-US"
@@ -268,6 +321,14 @@ export const usePubkeyLogin = () => {
     throw new Error("Ngine context not found");
   }
   return context.npubLogin;
+};
+
+export const useBunkerLogin = () => {
+  const context = useContext(NgineContext);
+  if (context === undefined) {
+    throw new Error("Ngine context not found");
+  }
+  return context.nip46Login;
 };
 
 export const useNsecLogin = () => {

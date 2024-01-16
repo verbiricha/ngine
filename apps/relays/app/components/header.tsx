@@ -44,7 +44,7 @@ export default function Header() {
       </Flex>
       <HStack>
         <ColorModeToggle />
-        <LoginButton size="sm" methods={["nip07", "npub"]}>
+        <LoginButton size="sm">
           {session?.pubkey && (
             <>
               <MenuItem

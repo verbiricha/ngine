@@ -39,12 +39,18 @@ export interface Links {
 
 // Sessions
 
-export type LoginMethod = "nip07" | "npub" | "nsec";
+// todo: nip05 with nip46
+export type LoginMethod = "nip07" | "nip46" | "npub" | "nsec";
 
 export interface Session {
   method: LoginMethod;
   pubkey: string;
   privkey?: string;
+  bunker?: {
+    privkey: string;
+    pubkey: string;
+    relays: string[];
+  };
 }
 
 // Components

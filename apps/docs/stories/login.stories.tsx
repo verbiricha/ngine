@@ -40,3 +40,18 @@ export const Pubkey: Story = {
     method: "npub",
   },
 };
+
+export const Bunker: Story = {
+  name: "Bunker",
+  render(props) {
+    return (
+      <Stack spacing={5}>
+        <Login {...props} />
+        <LoginMenu />
+      </Stack>
+    );
+  },
+  args: {
+    method: "nip46",
+  },
+};
