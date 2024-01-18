@@ -48,7 +48,6 @@ export interface Session {
   privkey?: string;
   bunker?: {
     privkey: string;
-    pubkey: string;
     relays: string[];
   };
 }

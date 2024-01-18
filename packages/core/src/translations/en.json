@@ -1,7 +1,7 @@
 {
   "ngine.bookmarks-count": "Bookmarks ({count})",
   "ngine.bunker-login": "Log in",
-  "ngine.bunker-url-placeholder": "bunker://",
+  "ngine.bunker-url-placeholder": "bunker:// URL or nostr address",
   "ngine.comment-label": "Comment",
   "ngine.comment-placeholder": "Type your reply here",
   "ngine.copy": "Copy",

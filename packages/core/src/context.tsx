@@ -166,7 +166,7 @@ export const NgineProvider = ({
       const signer = new NDKPrivateKeySigner(session.privkey);
       ndk.signer = signer;
     } else if (session?.method === "nip46" && session.bunker) {
-      const { privkey, pubkey, relays } = session.bunker;
+      const { privkey, relays } = session.bunker;
       const localSigner = new NDKPrivateKeySigner(privkey);
       const bunkerNDK = new NDK({ explicitRelayUrls: relays });
       bunkerNDK.connect().then(() => {
@@ -175,6 +175,9 @@ export const NgineProvider = ({
           session.pubkey,
           localSigner,
         );
+        signer.on("authUrl", (url) => {
+          window.open(url, "auth", "width=600,height=600");
+        });
         ndk.signer = signer;
       });
     }
@@ -194,30 +197,55 @@ export const NgineProvider = ({
     return user;
   }
 
-  async function nip46Login(url: string) {
-    const asURL = new URL(url);
-    const relays = asURL.searchParams.getAll("relay");
-    const pubkey = asURL.pathname.replace(/^\/\//, "");
-    const bunkerNDK = new NDK({
-      explicitRelayUrls: relays,
-    });
-    await bunkerNDK.connect();
-    const localSigner = NDKPrivateKeySigner.generate();
-    const signer = new NDKNip46Signer(bunkerNDK, pubkey, localSigner);
-    const user = await signer.blockUntilReady();
-    if (user) {
-      ndk.signer = signer;
-      setSession({
-        method: "nip46",
-        pubkey: user.pubkey,
-        bunker: {
-          privkey: localSigner.privateKey as string,
+  async function getNostrConnectSettings(url: string) {
+    if (url.includes("bunker://")) {
+      const asURL = new URL(url);
+      const relays = asURL.searchParams.getAll("relay");
+      const pubkey = asURL.pathname.replace(/^\/\//, "");
+      return { relays, pubkey };
+    } else {
+      const user = await NDKUser.fromNip05(url, ndk);
+      if (user) {
+        const pubkey = user.hexpubkey;
+        const relays =
+          user.nip46Urls?.length > 0
+            ? user.nip46Urls
+            : ["wss://relay.nsecbunker.com"];
+        return {
           pubkey,
           relays,
-        },
-      });
+        };
+      }
     }
-    return user;
+  }
+
+  async function nip46Login(url: string) {
+    const settings = await getNostrConnectSettings(url);
+    if (settings) {
+      const { pubkey, relays } = settings;
+      const bunkerNDK = new NDK({
+        explicitRelayUrls: relays,
+      });
+      await bunkerNDK.connect();
+      const localSigner = NDKPrivateKeySigner.generate();
+      const signer = new NDKNip46Signer(bunkerNDK, pubkey, localSigner);
+      signer.on("authUrl", (url) => {
+        window.open(url, "auth", "width=600,height=600");
+      });
+      const user = await signer.blockUntilReady();
+      if (user) {
+        ndk.signer = signer;
+        setSession({
+          method: "nip46",
+          pubkey,
+          bunker: {
+            privkey: localSigner.privateKey as string,
+            relays,
+          },
+        });
+      }
+      return user;
+    }
   }
 
   async function npubLogin(pubkey: string) {

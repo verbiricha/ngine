@@ -160,7 +160,7 @@ export function LoginBunker({ onLogin }: LoginProps) {
           placeholder={formatMessage({
             id: "ngine.bunker-url-placeholder",
             description: "Bunker URL placeholder",
-            defaultMessage: "bunker://",
+            defaultMessage: "bunker:// URL or nostr address",
           })}
           value={url}
           onChange={(ev) => setUrl(ev.target.value)}

@@ -8,7 +8,7 @@
     "description": "A button for logging in with a nsecbunker"
   },
   "ngine.bunker-url-placeholder": {
-    "defaultMessage": "bunker://",
+    "defaultMessage": "bunker:// URL or nostr address",
     "description": "Bunker URL placeholder"
   },
   "ngine.comment-label": {
