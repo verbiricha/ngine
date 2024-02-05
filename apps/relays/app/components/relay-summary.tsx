@@ -88,7 +88,16 @@ function Nips({ metadata }: RelaySummaryProps) {
           <HStack flexWrap="wrap">
             {supported_nips.map((n: number) => (
               <Box key={n}>
-                <Link isExternal variant="brand" href={`https://nips.be/${n}`}>
+                <Link
+                  isExternal
+                  variant="brand"
+                  href={`https://github.com/nostr-protocol/nips/blob/master/${n.toLocaleString(
+                    "en",
+                    {
+                      minimumIntegerDigits: 2,
+                    },
+                  )}.md`}
+                >
                   {n}
                 </Link>
               </Box>
