@@ -36,9 +36,6 @@ import {
 import { NDKKind } from "@nostr-dev-kit/ndk";
 import { FormattedMessage } from "react-intl";
 
-// todo: if author: edit
-// todo: add to favorites emojis
-
 export default function EmojiSet({ event }: EventProps) {
   const router = useRouter();
   const title = event.tagValue("title") || event.tagValue("d");
