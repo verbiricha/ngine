@@ -102,7 +102,7 @@ export default function NewEmojiSet({
   const canSign = useSigner();
   const [name, setName] = useState<string>(defaultName);
   const [emojis, setEmojis] = useState<EmojiDefinition[]>(defaultEmojis);
-  const canSave = canSign && name.trim().length > 0
+  const canSave = canSign && name.trim().length > 0;
 
   function addEmoji(e: EmojiDefinition) {
     setEmojis(emojis.concat([e]));

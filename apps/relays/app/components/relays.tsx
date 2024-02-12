@@ -14,24 +14,48 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import NDK, { NDKRelaySet } from "@nostr-dev-kit/ndk";
 import { useIntl, FormattedMessage } from "react-intl";
-import { useRelays } from "@ngine/core";
+import { useNDK, useRelays } from "@ngine/core";
+import { useQuery } from "@tanstack/react-query";
 
 import RelayLink from "./relay-link";
 import RelayIcon from "./relay-icon";
 import { encodeRelayURL } from "../utils";
+import { NOSTR_WATCH, RELAY_MONITOR } from "@ui/const";
+
+async function fetchRelays(ndk: NDK) {
+  const events = await ndk.fetchEvents(
+    {
+      authors: [NOSTR_WATCH],
+      kinds: [RELAY_MONITOR],
+      since: Math.round(Date.now() / 1000) - 60 * 60 * 24 * 1000,
+    },
+    {
+      closeOnEose: true,
+    },
+    NDKRelaySet.fromRelayUrls(["wss://history.nostr.watch"], ndk),
+  );
+
+  return Array.from(events);
+}
 
 export default function Relays() {
   const { formatMessage } = useIntl();
   const router = useRouter();
   const [relay, setRelay] = useState("");
   const myRelays = useRelays();
-  const { data, isFetched, isError } = useQuery({
+  const ndk = useNDK();
+  const { data: events, isError } = useQuery({
     queryKey: ["relays"],
-    queryFn: () =>
-      fetch(`https://api.nostr.watch/v1/online`).then((r) => r.json()),
+    queryFn: () => fetchRelays(ndk),
   });
+  const relayUrls = useMemo(() => {
+    return (events ?? [])
+      .map((e) => e.tagValue("d"))
+      .filter((url) => url)
+      .map((url) => url!.replace(/\/$/, ""));
+  }, [events]);
 
   function relayScore(url: string) {
     if (myRelays.includes(url)) {
@@ -41,13 +65,11 @@ export default function Relays() {
   }
 
   const relays = useMemo(() => {
-    const raw = data
-      ? [...data].sort((a, b) => relayScore(b) - relayScore(a))
-      : [];
+    const raw = [...relayUrls].sort((a, b) => relayScore(b) - relayScore(a));
     return raw
       .filter((url) => url.toLowerCase().includes(relay.toLowerCase()))
       .slice(0, 21);
-  }, [relay, data, myRelays]);
+  }, [relay, relayUrls, myRelays]);
 
   function goToRelay(url: string) {
     router.push(`/relay/${encodeRelayURL(url)}`);
@@ -103,9 +125,10 @@ export default function Relays() {
             />
           </Alert>
         )}
-        {isFetched &&
-          relays.map((url: string) => <RelayLink key={url} url={url} />)}
-        {isFetched && relays.length === 0 && (
+        {relays.map((url: string) => (
+          <RelayLink key={url} url={url} />
+        ))}
+        {relays.length === 0 && relay.length > 0 && (
           <Text color="chakra-subtle-text">
             <FormattedMessage
               id="no-relays-found"
