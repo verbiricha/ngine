@@ -22,13 +22,13 @@ import { useQuery } from "@tanstack/react-query";
 import RelayLink from "./relay-link";
 import RelayIcon from "./relay-icon";
 import { encodeRelayURL } from "../utils";
-import { NOSTR_WATCH, RELAY_MONITOR } from "@ui/const";
+import { NOSTR_WATCH_MONITOR, RELAY_METADATA } from "@ui/const";
 
 async function fetchRelays(ndk: NDK) {
   const events = await ndk.fetchEvents(
     {
-      authors: [NOSTR_WATCH],
-      kinds: [RELAY_MONITOR],
+      authors: [NOSTR_WATCH_MONITOR],
+      kinds: [RELAY_METADATA],
       since: Math.round(Date.now() / 1000) - 60 * 60 * 24 * 1000,
     },
     {
