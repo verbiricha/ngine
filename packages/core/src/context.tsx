@@ -201,7 +201,7 @@ export const NgineProvider = ({
     if (url.includes("bunker://")) {
       const asURL = new URL(url);
       const relays = asURL.searchParams.getAll("relay");
-      const pubkey = asURL.pathname.replace(/^\/\//, "");
+      const pubkey = asURL.hostname || asURL.pathname.replace(/^\/\//, "");
       return { relays, pubkey };
     } else {
       const user = await NDKUser.fromNip05(url, ndk);
