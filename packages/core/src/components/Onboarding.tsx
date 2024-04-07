@@ -308,8 +308,8 @@ export default function Onboarding({
           return r.read && !r.write
             ? ["r", r.url, "read"]
             : r.write && !r.read
-            ? ["r", r.url, "write"]
-            : ["r", r.url];
+              ? ["r", r.url, "write"]
+              : ["r", r.url];
         }),
         created_at: unixNow(),
       };

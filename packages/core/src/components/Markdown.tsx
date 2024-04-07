@@ -119,8 +119,8 @@ function extractNprofiles(
               const url = links?.nprofile
                 ? links.nprofile(nprofile)
                 : links?.npub
-                ? links.npub(nprofile)
-                : `/${nprofile}`;
+                  ? links.npub(nprofile)
+                  : `/${nprofile}`;
               if (decoded.type === "nprofile") {
                 const { pubkey } = decoded.data;
                 return (
