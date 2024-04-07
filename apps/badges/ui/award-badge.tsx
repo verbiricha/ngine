@@ -11,8 +11,10 @@ function BatchPubkeyPicker({ addPubkeys }: BatchPubkeyPickerProps) {
   const [pubkeys, setPubkeys] = useState("");
 
   function onChange(raw: string) {
-    const pks = raw.split(/\s/).filter((s) => s.length === 64);
-    console.log("PKS", pks);
+    const pks = raw
+      .split(/\s|,/)
+      .map((s) => s.trim())
+      .filter((s) => s.length === 64);
     addPubkeys(pks);
     setPubkeys("");
   }
