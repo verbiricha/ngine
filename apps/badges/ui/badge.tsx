@@ -10,6 +10,7 @@ import {
   Heading,
   Text,
   Icon,
+  Button,
 } from "@chakra-ui/react";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import {
@@ -81,6 +82,12 @@ function BadgeDetails({
   const canSign = useSigner();
   const { awards, awardees } = useAwards(event);
   const isOwner = event.pubkey === session?.pubkey;
+  const router = useRouter();
+
+  function editBadge() {
+    router.push(`/a/${event.encode()}/edit`);
+  }
+
   return (
     <Stack mt={4} w="100%" fontSize="sm">
       <HStack justify="space-between">
@@ -101,6 +108,11 @@ function BadgeDetails({
           {awards.length}
         </Text>
       </HStack>
+      {isOwner && canSign && (
+        <Button variant="outline" onClick={editBadge}>
+          Edit
+        </Button>
+      )}
       {isOwner && canSign && <AwardBadge event={event} />}
     </Stack>
   );
