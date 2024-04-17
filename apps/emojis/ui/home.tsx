@@ -300,7 +300,7 @@ function EmojisBelt() {
 function FeaturedEmojiPacks() {
   const addresses = [
     "30030:cd408a69cc6c737ca1a76efc3fa247c6ca53ec807f6e7c9574164164797e8162:SUSHIYUKI",
-    "30030:7fa56f5d6962ab1e3cd424e758c3002b8665f7b0d8dcee9fe9e288d7751ac194:twitch",
+    "30030:d7607464225c8ab610da99495bc70c8a3a45a03f8a22a95f06fcb5bc421e573a:Reacts",
   ];
   const { events: emojiPacks } = useAddresses(addresses, {
     cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
