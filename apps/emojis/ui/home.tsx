@@ -301,13 +301,14 @@ function FeaturedEmojiPacks() {
   const addresses = [
     "30030:cd408a69cc6c737ca1a76efc3fa247c6ca53ec807f6e7c9574164164797e8162:SUSHIYUKI",
     "30030:d7607464225c8ab610da99495bc70c8a3a45a03f8a22a95f06fcb5bc421e573a:Reacts",
+    "30030:cd408a69cc6c737ca1a76efc3fa247c6ca53ec807f6e7c9574164164797e8162:Nostopus",
   ];
   const { events: emojiPacks } = useAddresses(addresses, {
     cacheUsage: NDKSubscriptionCacheUsage.PARALLEL,
   });
-  const emojis = emojiPacks
-    .map((e) => e.tags.filter((t) => t[0] === "emoji"))
-    .flat();
+  const sorted = emojiPacks.sort(
+    (a, b) => addresses.indexOf(a.tagId()) - addresses.indexOf(b.tagId()),
+  );
   return (
     <Stack>
       <Heading fontSize="5xl">Popular</Heading>
@@ -318,7 +319,7 @@ function FeaturedEmojiPacks() {
         }}
         spacing={6}
       >
-        {emojiPacks.map((e) => (
+        {sorted.map((e) => (
           <EmojiSet key={e.id} event={e} />
         ))}
       </SimpleGrid>
