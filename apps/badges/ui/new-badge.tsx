@@ -64,7 +64,8 @@ export default function NewBadge() {
   }, []);
 
   useEffect(() => {
-    const d = slugify(name);
+    const slug = slugify(name);
+    const d = slug.length > 0 ? slug : String(Date.now());
     const ev = {
       pubkey: session?.pubkey || "",
       kind: NDKKind.BadgeDefinition,
