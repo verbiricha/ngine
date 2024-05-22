@@ -41,6 +41,7 @@ export default function Home() {
   const { events: profiles } = useEvents(
     {
       kinds: [NDKKind.ProfileBadge],
+      "#d": ["profile_badges"],
       authors: [
         "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411", // karnag
         "7fa56f5d6962ab1e3cd424e758c3002b8665f7b0d8dcee9fe9e288d7751ac194", // verbi

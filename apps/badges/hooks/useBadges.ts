@@ -12,6 +12,7 @@ import { getPow } from "@core/rarity";
 export default function useBadges(pubkey: string) {
   const profile = useLatestEvent({
     kinds: [NDKKind.ProfileBadge],
+    "#d": ["profile_badges"],
     authors: [pubkey],
   });
   const addresses = profile ? tagValues(profile, "a") : [];

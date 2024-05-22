@@ -23,7 +23,7 @@ export default function BadgeSettings({
   async function wear() {
     const tags = profile
       ? profile.tags.concat([badge.tagReference(), award.tagReference()])
-      : [badge.tagReference(), award.tagReference()];
+      : [["d", "profile_badges"], badge.tagReference(), award.tagReference()];
     const ev = {
       kind: NDKKind.ProfileBadge,
       content: "",
@@ -51,7 +51,7 @@ export default function BadgeSettings({
           }
           return true;
         })
-      : [];
+      : [["d", "profile_badges"]];
     const ev = {
       kind: NDKKind.ProfileBadge,
       content: "",
