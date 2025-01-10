@@ -3,10 +3,11 @@ import { NDKKind, NDKFilter } from "@nostr-dev-kit/ndk";
 export function addressesToFilter(addresses: string[]): NDKFilter {
   const filter = addresses.reduce(
     (acc, a) => {
-      const [k, pubkey, d] = a.split(":");
+      const [k, pubkey, ...d] = a.split(":");
       acc.kinds.add(Number(k));
       acc.authors.add(pubkey);
-      acc["#d"].add(d);
+      // joining again in case the badge unique name contained a ':' character
+      acc["#d"].add(d.join(':'));
       return acc;
     },
     {
